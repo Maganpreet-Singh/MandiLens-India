@@ -1,0 +1,111 @@
+# =============================================================================
+# MANDILENS INDIA — PROJECT DEPENDENCIES
+# =============================================================================
+# Purpose:
+#   Install the Python packages used across the MandiLens India data pipeline,
+#   analysis notebooks, forecasting experiments, dashboard, API layer and tests.
+#
+# Recommended development interpreter:
+#   Python 3.12.x
+#
+# Python compatibility:
+#   The project targets Python 3.11 or newer. Python 3.12 is the recommended
+#   baseline for a consistent local development environment. Confirm the
+#   supported Python versions of all selected packages before changing it.
+#
+# Installation:
+#   python -m pip install --upgrade pip
+#   python -m pip install -r requirements.txt
+#
+# Notes:
+#   - Version ranges are intentional; this is not a fully locked environment.
+#   - Upper bounds reduce the risk of an unexpected major-version upgrade.
+#   - For reproducible releases, generate and review a platform-specific lock
+#     file after the initial environment has been installed and tested.
+#   - This unified file includes notebook, development, dashboard and optional
+#     API dependencies. A lightweight deployment file can be split out later.
+#   - Do not install packages that are not needed by the project merely because
+#     they are popular in the Data Science ecosystem.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CORE DATA PROCESSING
+#    Tabular data, numerical computation and columnar storage.
+# -----------------------------------------------------------------------------
+numpy>=2.0,<3.0
+pandas>=2.2.3,<4.0
+polars>=1.20,<2.0
+pyarrow>=18.0,<27.0
+
+
+# -----------------------------------------------------------------------------
+# 2. LARGE-SCALE ANALYTICS AND DATA ENGINEERING
+#    SQL analytics, efficient file access and scalable data operations.
+# -----------------------------------------------------------------------------
+duckdb>=1.2,<3.0
+fsspec>=2024.10,<2027.0
+psutil>=6.0,<8.0
+
+
+# -----------------------------------------------------------------------------
+# 3. DATA ACQUISITION AND CONFIGURATION
+#    Hugging Face dataset access, HTTP requests, progress reporting and config.
+# -----------------------------------------------------------------------------
+huggingface_hub>=0.27,<2.0
+requests>=2.32,<3.0
+tqdm>=4.67,<5.0
+python-dotenv>=1.0,<2.0
+PyYAML>=6.0,<7.0
+
+
+# -----------------------------------------------------------------------------
+# 4. DATA VISUALIZATION
+#    Static, statistical and interactive charts for notebooks and the dashboard.
+# -----------------------------------------------------------------------------
+matplotlib>=3.9,<4.0
+seaborn>=0.13.2,<1.0
+plotly>=6.0,<7.0
+
+
+# -----------------------------------------------------------------------------
+# 5. SCIENTIFIC COMPUTING AND MACHINE LEARNING
+#    Statistical computing, classical ML, gradient boosting and model utilities.
+# -----------------------------------------------------------------------------
+scipy>=1.14,<2.0
+scikit-learn>=1.6,<2.0
+statsmodels>=0.14.4,<1.0
+xgboost>=2.1,<4.0
+lightgbm>=4.5,<5.0
+catboost>=1.2.8,<2.0
+joblib>=1.4,<2.0
+
+
+# -----------------------------------------------------------------------------
+# 6. APPLICATION AND API DEVELOPMENT
+#    Streamlit is the primary UI. FastAPI/Uvicorn are included for a future
+#    optional API service; they are not required to run the Streamlit dashboard.
+# -----------------------------------------------------------------------------
+streamlit>=1.40,<2.0
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.34,<1.0
+pydantic>=2.10,<3.0
+
+
+# -----------------------------------------------------------------------------
+# 7. JUPYTER NOTEBOOK ENVIRONMENT
+#    Interactive development, notebook execution and widgets.
+# -----------------------------------------------------------------------------
+jupyterlab>=4.3,<5.0
+notebook>=7.3,<8.0
+ipykernel>=6.29,<8.0
+ipywidgets>=8.1,<9.0
+
+
+# -----------------------------------------------------------------------------
+# 8. TESTING, CODE QUALITY AND DEVELOPMENT TOOLS
+#    Automated tests, coverage reporting, linting and formatting.
+# -----------------------------------------------------------------------------
+pytest>=8.3,<10.0
+pytest-cov>=6.0,<8.0
+ruff>=0.9,<1.0

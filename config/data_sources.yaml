@@ -1,0 +1,1445 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# CENTRAL DATA SOURCE REGISTRY
+# =============================================================================
+#
+# Project:
+#   MandiLens India
+#
+# File:
+#   config/data_sources.yaml
+#
+# Purpose:
+#   Central registry for all external datasets, source repositories,
+#   API integrations, download policies, provenance and data acquisition.
+#
+# Primary dataset:
+#   DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+#
+# Important:
+#   - Download the complete historical dataset.
+#   - Never filter the master dataset by state or commodity.
+#   - Never modify original source files.
+#   - Discover remote files instead of assuming every filename.
+#   - Verify the actual schema locally before transformations.
+#   - Keep credentials outside version control.
+#   - Do not assume that optional external APIs are operational.
+#
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURATION METADATA
+# -----------------------------------------------------------------------------
+
+metadata:
+
+  configuration_name: "MandiLens India Data Source Registry"
+
+  configuration_version: "1.0.0"
+
+  configuration_status: "development"
+
+  description: >
+    Central configuration for agricultural market datasets,
+    historical mandi prices, official government data,
+    weather integration and future agricultural data sources.
+
+  project_name: "MandiLens India"
+
+  schema_version: 1
+
+  primary_source_id: "mandi_huggingface"
+
+  default_timezone: "Asia/Kolkata"
+
+  default_currency: "INR"
+
+
+# -----------------------------------------------------------------------------
+# 2. GLOBAL DATA SOURCE POLICIES
+# -----------------------------------------------------------------------------
+
+global_policies:
+
+  # Master dataset requirements
+
+  dataset_scope:
+
+    geographical_scope: "nationwide"
+
+    include_all_available_states: true
+
+    include_all_available_union_territories: true
+
+    include_all_available_districts: true
+
+    include_all_available_markets: true
+
+    include_all_available_commodities: true
+
+    include_all_available_varieties: true
+
+    complete_historical_coverage: true
+
+  # Source preservation
+
+  source_preservation:
+
+    preserve_original_files: true
+
+    overwrite_original_files: false
+
+    delete_raw_data_after_processing: false
+
+    modify_source_schema: false
+
+    maintain_source_provenance: true
+
+    maintain_download_manifest: true
+
+  # Download configuration
+
+  download:
+
+    resume_interrupted_downloads: true
+
+    skip_verified_existing_files: true
+
+    verify_downloaded_files: true
+
+    generate_download_manifest: true
+
+    preserve_remote_directory_structure: true
+
+    overwrite_existing_downloads: false
+
+    retry_failed_downloads: true
+
+    maximum_retries: 5
+
+    retry_backoff_seconds: 2
+
+    request_timeout_seconds: 120
+
+    concurrent_downloads: 4
+
+  # Network behavior
+
+  network:
+
+    use_https: true
+
+    follow_redirects: true
+
+    verify_ssl_certificates: true
+
+    connection_timeout_seconds: 30
+
+    read_timeout_seconds: 120
+
+  # Data integrity
+
+  integrity:
+
+    calculate_sha256: true
+
+    record_file_size: true
+
+    record_file_checksum: true
+
+    record_remote_revision: true
+
+    validate_parquet_files: true
+
+    detect_missing_files: true
+
+    detect_duplicate_files: true
+
+    verify_row_counts: true
+
+    never_assume_expected_row_count_is_actual: true
+
+  # Data processing restrictions
+
+  processing:
+
+    use_duckdb_for_large_scale_queries: true
+
+    use_polars_for_large_scale_transformations: true
+
+    avoid_full_dataset_pandas_loading: true
+
+    process_files_incrementally: true
+
+    support_partitioned_parquet: true
+
+    preserve_raw_data_types: true
+
+
+# -----------------------------------------------------------------------------
+# 3. SOURCE REGISTRY
+# -----------------------------------------------------------------------------
+
+sources:
+
+
+  # ===========================================================================
+  # SOURCE 01 — PRIMARY HISTORICAL MANDI DATASET
+  # ===========================================================================
+
+  mandi_huggingface:
+
+    enabled: true
+
+    required: true
+
+    priority: 1
+
+    source_id: "mandi_huggingface"
+
+    source_name: "India Mandi Daily Commodity Prices (2001-2026)"
+
+    source_type: "historical_dataset"
+
+    source_category: "agricultural_market_prices"
+
+    source_role: "primary_master_dataset"
+
+    verification_status: "repository_listing_verified_local_download_pending"
+
+    description: >
+      Historical agricultural commodity market prices from Indian
+      wholesale mandis, covering available states, districts,
+      markets, commodities, varieties and grades.
+
+    # -----------------------------------------------------------------------
+    # Repository identification
+    # -----------------------------------------------------------------------
+
+    repository:
+
+      provider: "Hugging Face"
+
+      provider_type: "dataset_repository"
+
+      repo_id: "DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026"
+
+      repo_type: "dataset"
+
+      revision: "main"
+
+      dataset_url: >
+        https://huggingface.co/datasets/DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+
+      data_card_url: >
+        https://huggingface.co/datasets/DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+
+      revision_policy:
+
+        revision_is_mutable: true
+
+        resolve_commit_before_download: true
+
+        record_resolved_commit_hash: true
+
+        use_resolved_commit_for_reproducibility: true
+
+        automatically_switch_to_latest_revision: false
+
+    # -----------------------------------------------------------------------
+    # Published dataset profile
+    # -----------------------------------------------------------------------
+
+    published_profile:
+
+      record_count:
+
+        value: 75962937
+
+        approximate: false
+
+        verification: "publisher_reported_not_locally_verified"
+
+      historical_period:
+
+        start_year: 2001
+
+        end_year: 2026
+
+        verification: "publisher_reported"
+
+      file_format: "parquet"
+
+      reported_file_count: 26
+
+      repository_size_mb: 853
+
+      dataset_split: "train"
+
+      geographical_coverage: "India"
+
+      reported_unique_values:
+
+        states: 34
+
+        districts: 642
+
+        commodities: 389
+
+      verification_policy:
+
+        verify_actual_row_count: true
+
+        verify_actual_file_count: true
+
+        verify_actual_date_range: true
+
+        verify_geographical_coverage: true
+
+        verify_commodity_coverage: true
+
+    # -----------------------------------------------------------------------
+    # Remote file discovery
+    # -----------------------------------------------------------------------
+
+    repository_layout:
+
+      observed_data_directory: "data/mandi_daily_by_year/"
+
+      primary_format: ".parquet"
+
+      discovery_method: "repository_file_listing"
+
+      discovery_required: true
+
+      include_all_matching_files: true
+
+      recursive_discovery: true
+
+      preserve_remote_relative_paths: true
+
+      selection_policy: "all_dataset_parquet_files"
+
+      restrict_by_year: false
+
+      restrict_by_state: false
+
+      restrict_by_district: false
+
+      restrict_by_commodity: false
+
+      restrict_by_market: false
+
+      restrict_by_variety: false
+
+      use_hardcoded_complete_file_list: false
+
+      observed_example_file:
+
+        remote_path: "data/mandi_daily_by_year/mandi_daily_2025.parquet"
+
+        size_mb: 71.9
+
+        sha256: "65a848dfc4be3f84a911e5375abfa5d67481cf547c6a9ae382932d9166bb5e93"
+
+        verification_scope: "single_reference_file_only"
+
+        observation_status: "repository_file_page_verified"
+
+    # -----------------------------------------------------------------------
+    # Observed dataset schema
+    # -----------------------------------------------------------------------
+
+    observed_schema:
+
+      source: "huggingface_dataset_viewer"
+
+      observation_status: "viewer_schema_observed_local_verification_pending"
+
+      schema_verified_locally: false
+
+      columns:
+
+        - name: "State"
+          observed_type: "string"
+
+        - name: "District"
+          observed_type: "string"
+
+        - name: "Market"
+          observed_type: "string"
+
+        - name: "Commodity"
+          observed_type: "string"
+
+        - name: "Variety"
+          observed_type: "string"
+
+        - name: "Grade"
+          observed_type: "string"
+
+        - name: "Arrival_Date"
+          observed_type: "date32"
+
+        - name: "Min_Price"
+          observed_type: "float64"
+
+        - name: "Max_Price"
+          observed_type: "float64"
+
+        - name: "Modal_Price"
+          observed_type: "float64"
+
+        - name: "Commodity_Code"
+          observed_type: "int64"
+
+      schema_enforcement:
+
+        enforce_before_local_audit: false
+
+        use_observed_schema_as_initial_reference: true
+
+        discover_actual_column_names: true
+
+        discover_actual_data_types: true
+
+        detect_additional_columns: true
+
+        detect_missing_columns: true
+
+        detect_type_mismatches: true
+
+        document_schema_changes: true
+
+      known_data_limitations:
+
+        arrival_quantity:
+
+          available: false
+
+          verification: "publisher_dataset_card_statement"
+
+          implication: >
+            Arrival quantity or volume prediction cannot be performed
+            using this dataset alone.
+
+        price_unit:
+
+          value: null
+
+          verification: "pending_source_documentation"
+
+          instruction: >
+            Verify the original source unit before presenting prices
+            or computing financial comparisons.
+
+    # -----------------------------------------------------------------------
+    # Dataset capabilities
+    # -----------------------------------------------------------------------
+
+    analytical_capabilities:
+
+      supported:
+
+        - "historical_price_analysis"
+
+        - "national_market_analysis"
+
+        - "state_wise_price_analysis"
+
+        - "district_wise_price_analysis"
+
+        - "mandi_price_comparison"
+
+        - "commodity_price_analysis"
+
+        - "variety_level_analysis"
+
+        - "grade_level_analysis"
+
+        - "seasonality_analysis"
+
+        - "price_volatility_analysis"
+
+        - "time_series_forecasting"
+
+        - "market_price_decision_support"
+
+      unsupported_without_additional_data:
+
+        - "arrival_quantity_forecasting"
+
+        - "arrival_volume_analysis"
+
+        - "actual_farmer_profit_calculation"
+
+        - "transport_cost_optimization"
+
+        - "farm_level_production_forecasting"
+
+    # -----------------------------------------------------------------------
+    # Authentication and access
+    # -----------------------------------------------------------------------
+
+    access:
+
+      access_method: "huggingface_hub"
+
+      public_repository_expected: true
+
+      authentication_required: false
+
+      token_optional: true
+
+      token_environment_variable: "HF_TOKEN"
+
+      library: "huggingface_hub"
+
+      recommended_download_method: "snapshot_download"
+
+      recommended_listing_method: "HfApi.list_repo_files"
+
+    # -----------------------------------------------------------------------
+    # Download strategy
+    # -----------------------------------------------------------------------
+
+    acquisition:
+
+      enabled: true
+
+      acquisition_mode: "complete_repository_dataset_file_discovery"
+
+      download_strategy: "discover_then_download"
+
+      steps:
+
+        - "Resolve repository revision."
+
+        - "List available repository files."
+
+        - "Identify all Parquet dataset files."
+
+        - "Verify remote file inventory."
+
+        - "Download every identified dataset Parquet file."
+
+        - "Preserve the original directory structure."
+
+        - "Calculate local file checksums."
+
+        - "Generate the source manifest."
+
+        - "Verify downloaded Parquet metadata."
+
+        - "Compare local inventory with remote inventory."
+
+      include_extensions:
+
+        - ".parquet"
+
+      exclude_extensions: []
+
+      filtering:
+
+        enabled: false
+
+        allow_year_filtering: false
+
+        allow_state_filtering: false
+
+        allow_commodity_filtering: false
+
+        allow_district_filtering: false
+
+      incremental_download:
+
+        enabled: true
+
+        compare_remote_revision: true
+
+        compare_file_size: true
+
+        compare_file_hash_when_available: true
+
+        redownload_modified_files: true
+
+        preserve_previous_snapshot: true
+
+    # -----------------------------------------------------------------------
+    # Local storage
+    # -----------------------------------------------------------------------
+
+    storage:
+
+      raw_directory: "data/raw/mandi_india_daily_prices"
+
+      staging_directory: "data/temp/mandi_india_daily_prices"
+
+      metadata_directory: "data/metadata/mandi_india_daily_prices"
+
+      downloaded_file_manifest: >
+        data/metadata/mandi_india_daily_prices/source_manifest.json
+
+      checksum_manifest: >
+        data/metadata/mandi_india_daily_prices/checksums.csv
+
+      schema_report: >
+        data/metadata/mandi_india_daily_prices/schema_report.json
+
+      inventory_report: >
+        reports/dataset_inventory.html
+
+      file_policy:
+
+        format: "parquet"
+
+        preserve_remote_paths: true
+
+        preserve_original_files: true
+
+        overwrite_existing_files: false
+
+        delete_raw_files: false
+
+    # -----------------------------------------------------------------------
+    # Integrity verification
+    # -----------------------------------------------------------------------
+
+    validation:
+
+      enabled: true
+
+      checks:
+
+        - "repository_revision_recorded"
+
+        - "remote_file_inventory_created"
+
+        - "local_file_inventory_created"
+
+        - "expected_files_downloaded"
+
+        - "file_size_validation"
+
+        - "sha256_checksum_validation"
+
+        - "parquet_readability"
+
+        - "parquet_schema_inspection"
+
+        - "actual_row_count_calculation"
+
+        - "date_range_verification"
+
+      fail_on_missing_files: true
+
+      fail_on_empty_files: true
+
+      fail_on_unreadable_parquet: true
+
+      fail_on_checksum_mismatch: true
+
+      fail_on_unexpected_schema_change: false
+
+      require_manual_review_for_schema_changes: true
+
+    # -----------------------------------------------------------------------
+    # Licensing and attribution
+    # -----------------------------------------------------------------------
+
+    licensing:
+
+      huggingface_license_field: "other"
+
+      upstream_license_claim: "Government Open Data License - India (GODL-India)"
+
+      upstream_license_url: "https://www.data.gov.in/Godl"
+
+      license_verification_required: true
+
+      verify_dataset_card: true
+
+      verify_repository_license_file: true
+
+      verify_upstream_license: true
+
+      attribution_required: true
+
+      attribution:
+
+        original_provider: "AGMARKNET"
+
+        government_department: >
+          Ministry of Agriculture and Farmers Welfare,
+          Government of India
+
+        original_portal: "data.gov.in"
+
+        dataset_compilation: "Manas Khandelwal"
+
+        repository_provider: "Hugging Face"
+
+    # -----------------------------------------------------------------------
+    # Source update policy
+    # -----------------------------------------------------------------------
+
+    refresh:
+
+      automatic_refresh: false
+
+      default_refresh_method: "manual_snapshot_audit"
+
+      detect_new_remote_files: true
+
+      detect_modified_remote_files: true
+
+      preserve_historical_snapshots: true
+
+      require_inventory_comparison: true
+
+      require_validation_before_promotion: true
+
+
+  # ===========================================================================
+  # SOURCE 02 — OFFICIAL GOVERNMENT DATA PORTAL
+  # ===========================================================================
+
+  data_gov_in:
+
+    enabled: false
+
+    required: false
+
+    priority: 2
+
+    source_id: "data_gov_in"
+
+    source_name: "Open Government Data Platform India"
+
+    source_type: "government_open_data"
+
+    source_category: "agricultural_market_prices"
+
+    source_role: "original_source_reference_and_future_refresh"
+
+    verification_status: "official_resource_page_verified_api_pending"
+
+    description: >
+      Official Indian government open-data portal containing
+      agricultural market price resources associated with AGMARKNET.
+
+    portal:
+
+      name: "Open Government Data Platform India"
+
+      base_url: "https://www.data.gov.in"
+
+      official_resource_url: >
+        https://data.gov.in/resource/variety-wise-daily-market-prices-data-commodity
+
+      catalog_url: >
+        https://data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi
+
+      help_url: "https://data.gov.in/help"
+
+      publisher: >
+        Ministry of Agriculture and Farmers Welfare,
+        Department of Agriculture and Farmers Welfare,
+        Directorate of Marketing and Inspection
+
+    resource:
+
+      resource_name: "Variety-wise Daily Market Prices Data of Commodity"
+
+      resource_id: null
+
+      resource_id_verification: "pending"
+
+      granularity: "daily"
+
+      published_page_updated_date: "2026-10-24"
+
+      observed_fields:
+
+        - "State"
+        - "District"
+        - "Market"
+        - "Commodity"
+        - "Variety"
+
+      access_contract_verified: false
+
+    api:
+
+      enabled: false
+
+      endpoint: null
+
+      resource_id: null
+
+      api_key_required: true
+
+      api_key_environment_variable: "DATA_GOV_IN_API_KEY"
+
+      portal_registration_required_for_key: true
+
+      request_api_if_unavailable: true
+
+      api_documentation_verification_required: true
+
+      pagination:
+
+        enabled: false
+
+        limit: null
+
+        offset: null
+
+      response_format: "json"
+
+      rate_limit: null
+
+      note: >
+        Do not construct or call a resource API until its official
+        endpoint, resource identifier, access permissions and
+        pagination behavior have been verified.
+
+    acquisition:
+
+      enabled: false
+
+      method: "official_api_or_portal_download"
+
+      preserve_original_response: true
+
+      record_retrieval_timestamp: true
+
+      store_request_metadata: true
+
+    storage:
+
+      raw_directory: "data/raw/official_government_data"
+
+      metadata_directory: "data/metadata/data_gov_in"
+
+      response_manifest: "data/metadata/data_gov_in/manifest.json"
+
+    attribution:
+
+      provider: "Government of India"
+
+      original_data_source: "AGMARKNET"
+
+      attribution_required: true
+
+    refresh:
+
+      frequency: "daily_source_granularity"
+
+      automatic_refresh: false
+
+      require_api_verification: true
+
+      require_data_overlap_checks: true
+
+
+  # ===========================================================================
+  # SOURCE 03 — WEATHER DATA INTEGRATION
+  # ===========================================================================
+
+  weather_data:
+
+    enabled: false
+
+    required: false
+
+    priority: 3
+
+    source_id: "weather_data"
+
+    source_name: "Indian Agricultural Weather Data"
+
+    source_type: "external_environmental_data"
+
+    source_category: "weather"
+
+    source_role: "future_feature_engineering"
+
+    verification_status: "provider_selection_pending"
+
+    description: >
+      Supporting weather observations and forecasts for studying
+      the relationship between environmental conditions and
+      agricultural commodity prices.
+
+    provider:
+
+      provider_name: null
+
+      provider_url: null
+
+      api_endpoint: null
+
+      api_key_environment_variable: "WEATHER_API_KEY"
+
+      authentication_required: null
+
+      selected: false
+
+    candidate_variables:
+
+      - "temperature"
+
+      - "minimum_temperature"
+
+      - "maximum_temperature"
+
+      - "rainfall"
+
+      - "relative_humidity"
+
+      - "wind_speed"
+
+    geographic_resolution:
+
+      preferred_level: "district"
+
+      alternative_level: "station"
+
+      administrative_mapping_required: true
+
+      coordinates_required: true
+
+    temporal_resolution:
+
+      preferred_frequency: "daily"
+
+      timezone: "Asia/Kolkata"
+
+      date_alignment_required: true
+
+    acquisition:
+
+      enabled: false
+
+      historical_weather: true
+
+      weather_forecasts: true
+
+      validate_station_coordinates: true
+
+      validate_missing_observations: true
+
+      preserve_source_timestamp: true
+
+    storage:
+
+      raw_directory: "data/raw/weather"
+
+      processed_directory: "data/processed/weather"
+
+      metadata_directory: "data/metadata/weather"
+
+    integration:
+
+      enabled: false
+
+      join_keys:
+
+        - "date"
+
+        - "geographical_identifier"
+
+      aggregation_method: "pending_design"
+
+      prevent_temporal_data_leakage: true
+
+    licensing:
+
+      verification_required: true
+
+      commercial_use_allowed: null
+
+      redistribution_allowed: null
+
+
+  # ===========================================================================
+  # SOURCE 04 — AGRICULTURAL PRODUCTION STATISTICS
+  # ===========================================================================
+
+  agricultural_production:
+
+    enabled: false
+
+    required: false
+
+    priority: 4
+
+    source_id: "agricultural_production"
+
+    source_name: "Indian Agricultural Production Statistics"
+
+    source_type: "government_agricultural_statistics"
+
+    source_category: "agricultural_production"
+
+    source_role: "future_market_context"
+
+    verification_status: "source_selection_pending"
+
+    description: >
+      Supporting agricultural production and crop-area statistics
+      for understanding supply-side market conditions.
+
+    provider:
+
+      provider_name: null
+
+      provider_url: null
+
+      dataset_url: null
+
+      resource_id: null
+
+    candidate_indicators:
+
+      - "crop_production"
+
+      - "cultivated_area"
+
+      - "crop_yield"
+
+      - "seasonal_production"
+
+      - "annual_production"
+
+    preferred_geographical_resolution:
+
+      - "state"
+
+      - "district"
+
+    preferred_temporal_resolution:
+
+      - "season"
+
+      - "year"
+
+    acquisition:
+
+      enabled: false
+
+      preserve_original_data: true
+
+      verify_units: true
+
+      verify_geographical_boundaries: true
+
+      verify_reporting_period: true
+
+    storage:
+
+      raw_directory: "data/raw/agricultural_production"
+
+      processed_directory: "data/processed/agricultural_production"
+
+      metadata_directory: "data/metadata/agricultural_production"
+
+    integration:
+
+      enabled: false
+
+      prevent_temporal_data_leakage: true
+
+      verify_commodity_name_mapping: true
+
+
+  # ===========================================================================
+  # SOURCE 05 — MINIMUM SUPPORT PRICE REFERENCE DATA
+  # ===========================================================================
+
+  minimum_support_prices:
+
+    enabled: false
+
+    required: false
+
+    priority: 5
+
+    source_id: "minimum_support_prices"
+
+    source_name: "Minimum Support Price Reference Data"
+
+    source_type: "government_policy_data"
+
+    source_category: "agricultural_price_policy"
+
+    source_role: "future_policy_reference"
+
+    verification_status: "source_selection_pending"
+
+    provider:
+
+      provider_name: null
+
+      provider_url: null
+
+      dataset_url: null
+
+    candidate_indicators:
+
+      - "commodity"
+
+      - "marketing_year"
+
+      - "minimum_support_price"
+
+      - "price_unit"
+
+      - "crop_category"
+
+    acquisition:
+
+      enabled: false
+
+      preserve_original_data: true
+
+      verify_announcement_date: true
+
+      verify_marketing_year: true
+
+      verify_commodity_mapping: true
+
+    storage:
+
+      raw_directory: "data/raw/msp"
+
+      processed_directory: "data/processed/msp"
+
+      metadata_directory: "data/metadata/msp"
+
+    integration:
+
+      enabled: false
+
+      compare_msp_with_modal_market_price: true
+
+
+# -----------------------------------------------------------------------------
+# 4. SOURCE PRIORITY AND DEPENDENCY MANAGEMENT
+# -----------------------------------------------------------------------------
+
+source_management:
+
+  primary_source: "mandi_huggingface"
+
+  source_priority_order:
+
+    - "mandi_huggingface"
+
+    - "data_gov_in"
+
+    - "weather_data"
+
+    - "agricultural_production"
+
+    - "minimum_support_prices"
+
+  fallback_policy:
+
+    use_secondary_source_when_primary_fails: false
+
+    require_schema_compatibility: true
+
+    require_provenance_tracking: true
+
+    require_source_comparison: true
+
+    require_duplicate_detection: true
+
+    never_silently_merge_sources: true
+
+  source_conflicts:
+
+    preserve_source_specific_records: true
+
+    document_conflicting_values: true
+
+    require_resolution_policy: true
+
+    preserve_original_values: true
+
+
+# -----------------------------------------------------------------------------
+# 5. SOURCE MANIFEST CONFIGURATION
+# -----------------------------------------------------------------------------
+
+manifest:
+
+  enabled: true
+
+  output_directory: "data/metadata"
+
+  formats:
+
+    - "json"
+    - "csv"
+
+  default_manifest_name: "source_manifest"
+
+  include_fields:
+
+    - "source_id"
+
+    - "source_name"
+
+    - "provider"
+
+    - "repository_id"
+
+    - "repository_revision"
+
+    - "remote_file_path"
+
+    - "local_relative_path"
+
+    - "file_format"
+
+    - "file_size_bytes"
+
+    - "sha256"
+
+    - "download_timestamp"
+
+    - "verification_status"
+
+    - "row_count"
+
+    - "schema_fingerprint"
+
+  generation:
+
+    create_manifest_before_download: true
+
+    update_manifest_after_download: true
+
+    preserve_previous_manifest: true
+
+    record_failed_downloads: true
+
+    record_validation_failures: true
+
+
+# -----------------------------------------------------------------------------
+# 6. DATASET INVENTORY CONFIGURATION
+# -----------------------------------------------------------------------------
+
+inventory:
+
+  enabled: true
+
+  output_directory: "data/metadata/mandi_india_daily_prices"
+
+  generate_file_inventory: true
+
+  generate_schema_inventory: true
+
+  generate_row_count_inventory: true
+
+  generate_date_range_inventory: true
+
+  generate_geographical_inventory: true
+
+  generate_commodity_inventory: true
+
+  generate_file_size_inventory: true
+
+  output_files:
+
+    file_inventory: "file_inventory.csv"
+
+    schema_inventory: "schema_inventory.json"
+
+    dataset_summary: "dataset_summary.json"
+
+    validation_summary: "validation_summary.json"
+
+
+# -----------------------------------------------------------------------------
+# 7. PROVENANCE AND AUDIT TRAIL
+# -----------------------------------------------------------------------------
+
+provenance:
+
+  enabled: true
+
+  record_source_url: true
+
+  record_source_repository: true
+
+  record_source_revision: true
+
+  record_original_provider: true
+
+  record_download_timestamp: true
+
+  record_file_checksums: true
+
+  record_transformations: true
+
+  preserve_source_lineage: true
+
+  audit_trail_directory: "data/metadata/audit"
+
+  require_lineage_for_processed_data: true
+
+  require_source_attribution_in_reports: true
+
+
+# -----------------------------------------------------------------------------
+# 8. CREDENTIALS AND SECURITY
+# -----------------------------------------------------------------------------
+
+credentials:
+
+  use_environment_variables: true
+
+  never_store_credentials_in_yaml: true
+
+  never_commit_api_keys: true
+
+  never_print_api_keys_in_logs: true
+
+  environment_variables:
+
+    huggingface_token: "HF_TOKEN"
+
+    data_gov_in_api_key: "DATA_GOV_IN_API_KEY"
+
+    weather_api_key: "WEATHER_API_KEY"
+
+  secret_validation:
+
+    validate_required_secrets_before_api_calls: true
+
+    fail_when_required_secret_is_missing: true
+
+    do_not_block_public_downloads_without_optional_tokens: true
+
+
+# -----------------------------------------------------------------------------
+# 9. SOURCE FAILURE HANDLING
+# -----------------------------------------------------------------------------
+
+failure_handling:
+
+  retry_transient_network_errors: true
+
+  maximum_retries: 5
+
+  exponential_backoff: true
+
+  retry_backoff_factor: 2
+
+  record_failed_requests: true
+
+  preserve_partially_downloaded_files: true
+
+  resume_supported_downloads: true
+
+  skip_corrupted_files_during_processing: false
+
+  quarantine_corrupted_files: true
+
+  quarantine_directory: "data/temp/quarantine"
+
+  stop_pipeline_on_primary_source_failure: true
+
+  stop_pipeline_on_integrity_failure: true
+
+  continue_when_optional_source_is_unavailable: true
+
+
+# -----------------------------------------------------------------------------
+# 10. SOURCE ACCEPTANCE CRITERIA
+# -----------------------------------------------------------------------------
+
+acceptance_criteria:
+
+  primary_dataset:
+
+    repository_accessible: true
+
+    complete_file_inventory_available: true
+
+    all_expected_parquet_files_downloaded: true
+
+    actual_row_count_calculated: true
+
+    schema_inspected: true
+
+    parquet_files_readable: true
+
+    checksums_recorded: true
+
+    source_revision_recorded: true
+
+    source_provenance_documented: true
+
+  official_sources:
+
+    official_provider_identified: true
+
+    source_endpoint_verified_before_use: true
+
+    authentication_verified_before_use: true
+
+    usage_terms_reviewed: true
+
+    source_schema_inspected: true
+
+  external_integrations:
+
+    geographical_mapping_verified: true
+
+    temporal_alignment_verified: true
+
+    licensing_reviewed: true
+
+    data_quality_reviewed: true
+
+
+# -----------------------------------------------------------------------------
+# 11. FINAL SOURCE REGISTRY STATUS
+# -----------------------------------------------------------------------------
+
+registry_status:
+
+  primary_dataset_configured: true
+
+  primary_repository_listing_verified: true
+
+  complete_dataset_download_verified: false
+
+  local_schema_verified: false
+
+  local_row_count_verified: false
+
+  checksums_verified_for_all_files: false
+
+  official_api_integrated: false
+
+  weather_integrated: false
+
+  production_statistics_integrated: false
+
+  msp_data_integrated: false
+
+  ready_for_data_source_audit: true
+
+
+# =============================================================================
+# END OF CONFIGURATION
+# =============================================================================

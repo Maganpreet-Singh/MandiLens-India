@@ -1,0 +1,151 @@
+# ============================================================================
+# MandiLens India — Python project configuration
+# ============================================================================
+# This file centralizes package metadata and developer-tool configuration.
+# Runtime dependencies remain managed in requirements.txt for this project.
+# Update the metadata and package-discovery settings if the source layout changes.
+
+[build-system]
+requires = ["setuptools>=69.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mandilens-india"
+version = "0.1.0"
+description = "Agricultural market analytics, price forecasting, and decision support for India."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary - see repository licensing terms" }
+authors = [
+    { name = "MandiLens India Project Contributors" },
+]
+keywords = [
+    "agriculture",
+    "india",
+    "mandi",
+    "market-intelligence",
+    "price-forecasting",
+    "data-science",
+    "machine-learning",
+    "time-series",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+# requirements.txt is the authoritative install list during early development.
+# Keep this project metadata dependency-free to avoid maintaining two lists.
+
+[project.urls]
+Homepage = "https://github.com/Maganpreet-Singh/MandiLens-India.git"
+Repository = "https://github.com/Maganpreet-Singh/MandiLens-India.git"
+Issues = "https://github.com/Maganpreet-Singh/MandiLens-India/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["mandilens*"]
+exclude = ["tests*"]
+
+# Ruff: fast Python linting and formatting.
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    ".venv",
+    "build",
+    "dist",
+    "data",
+    "artifacts",
+    "reports",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "F",      # Pyflakes
+    "W",      # pycodestyle warnings
+    "I",      # import sorting
+    "B",      # flake8-bugbear
+    "UP",     # pyupgrade
+    "SIM",    # simplify
+]
+ignore = [
+    "E501",   # line length is handled by the formatter; long strings may be intentional
+]
+
+[tool.ruff.lint.per-file-ignores]
+"notebooks/**/*.py" = ["E402", "F401"]
+"tests/**/*.py" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+skip-magic-trailing-comma = false
+
+# Pytest: discover automated tests under tests/.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "unit: fast tests of individual functions and classes",
+    "integration: tests involving multiple project components",
+    "slow: tests that take substantial time or resources",
+    "data: tests that require access to local datasets",
+    "model: tests involving trained machine-learning models",
+]
+
+# Coverage: measure the reusable application code, not notebooks or app pages.
+[tool.coverage.run]
+branch = true
+source = ["mandilens"]
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+# Mypy is intentionally permissive at the start of development. Tighten this
+# after the reusable src/mandilens modules have stable type annotations.
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = [
+    "^notebooks/",
+    "^app/",
+    "^build/",
+    "^dist/",
+]

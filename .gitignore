@@ -1,0 +1,374 @@
+# =============================================================================
+# MANDILENS INDIA — Git ignore rules
+# =============================================================================
+# Keep source code, notebooks, configuration templates, curated visualizations,
+# documentation, tests and useful reports in Git.
+# Keep local environments, credentials, caches, raw/derived data, databases,
+# model binaries and other reproducible or machine-specific outputs out of Git.
+#
+# Important:
+# - Never commit the original agricultural Parquet dataset to this repository.
+# - Store local datasets under data/raw/, data/interim/, data/processed/ or
+#   data/external/; these directories are intentionally excluded below.
+# - Keep .env.example tracked. Put real credentials in .env or another secret
+#   store, never in source control.
+# - Curated images/ and reports/ are NOT ignored by default.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. Python environments and packaging
+# -----------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.python-env/
+virtualenv/
+
+# Python build and distribution outputs
+build/
+dist/
+site/
+.eggs/
+eggs/
+*.egg
+*.egg-info/
+pip-wheel-metadata/
+
+# PyInstaller / frozen application outputs
+*.manifest
+*.spec
+
+
+# -----------------------------------------------------------------------------
+# 2. Python bytecode and runtime files
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pybuild/
+
+# Python interpreter and REPL history
+.python_history
+.python_repl_history
+
+
+# -----------------------------------------------------------------------------
+# 3. Secrets, credentials and local environment configuration
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+!.env.sample
+.envrc
+
+# Common credential and private-key files
+.secrets/
+secrets/
+secrets.json
+credentials.json
+credentials*.json
+service-account*.json
+*service_account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+.netrc
+.pypirc
+
+# Streamlit secrets and local-only configuration
+.streamlit/secrets.toml
+.streamlit/secrets.*.toml
+secrets.toml
+
+# Optional machine-specific configuration overrides
+*.local.yaml
+*.local.yml
+*.local.toml
+*.local.json
+
+
+# -----------------------------------------------------------------------------
+# 4. Large agricultural datasets and derived data
+# -----------------------------------------------------------------------------
+# Raw source files: preserve the original 76-million-record dataset locally,
+# but do not add it to Git. Keep a README or .gitkeep when needed to document
+# the expected directory structure.
+/data/raw/**
+!/data/raw/README.md
+!/data/raw/.gitkeep
+
+# Intermediate files created during cleaning and transformation
+/data/interim/**
+!/data/interim/README.md
+!/data/interim/.gitkeep
+
+# Processed analytical tables, feature stores and partitioned Parquet outputs
+/data/processed/**
+!/data/processed/README.md
+!/data/processed/.gitkeep
+
+# External datasets and downloaded third-party data
+/data/external/**
+!/data/external/README.md
+!/data/external/.gitkeep
+
+# Local data/query caches
+/data/cache/**
+!/data/cache/README.md
+!/data/cache/.gitkeep
+
+# Columnar/analytical data files are usually large, reproducible or derived.
+# Keep small test fixtures outside these extensions, or deliberately force-add
+# a reviewed fixture when there is a strong reason to version it.
+*.parquet
+*.parquet.gzip
+*.pq
+*.arrow
+*.feather
+*.orc
+
+# Partial downloads and temporary transfer files
+*.part
+*.partial
+*.crdownload
+*.download
+*.aria2
+
+
+# -----------------------------------------------------------------------------
+# 5. Local databases and database sidecar files
+# -----------------------------------------------------------------------------
+*.duckdb
+*.duckdb.wal
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+
+# Database exports and local database backups
+*.dump
+*.bak
+*.backup
+
+
+# -----------------------------------------------------------------------------
+# 6. Machine learning models, weights and training checkpoints
+# -----------------------------------------------------------------------------
+# Model and checkpoint directories
+/artifacts/models/
+/artifacts/checkpoints/
+/artifacts/cache/
+/artifacts/exports/
+
+# Common serialized models and tensor/checkpoint formats
+*.pkl
+*.pickle
+*.joblib
+*.model
+*.onnx
+*.h5
+*.hdf5
+*.keras
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.tflite
+*.pb
+
+# Common training and experiment output directories
+checkpoints/
+tensorboard/
+runs/
+mlruns/
+wandb/
+lightning_logs/
+ray_results/
+optuna_studies/
+
+# Keep intentionally curated metrics and small metadata under artifacts/.
+# Large generated forecasts should be stored under artifacts/forecasts/ and
+# reviewed before adding them to Git.
+/artifacts/forecasts/
+
+
+# -----------------------------------------------------------------------------
+# 7. Machine learning and data-library caches
+# -----------------------------------------------------------------------------
+.cache/
+.cache/huggingface/
+.cache/torch/
+.cache/transformers/
+hf_cache/
+huggingface_cache/
+transformers_cache/
+torch_cache/
+
+# Scikit-learn and other local estimator caches
+.joblib_cache/
+
+# DVC's local data cache (track .dvc configuration files, not the cache)
+.dvc/cache/
+
+
+# -----------------------------------------------------------------------------
+# 8. Jupyter Notebook and interactive development files
+# -----------------------------------------------------------------------------
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+.jupyter/
+
+# Jupyter runtime state
+.jupyter_runtime/
+
+# Notebook outputs are intentionally NOT ignored. Keep useful, reasonably sized
+# outputs when they help reviewers understand the analysis. Clear large or
+# sensitive outputs before committing a notebook.
+
+
+# -----------------------------------------------------------------------------
+# 9. Logs, temporary files and generated runtime state
+# -----------------------------------------------------------------------------
+logs/
+log/
+*.log
+*.log.*
+
+.tmp/
+tmp/
+temp/
+temporary/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# PID, lock and socket files created by local processes
+*.pid
+*.seed
+*.sock
+
+# Crash dumps and profiling outputs
+*.stackdump
+core
+core.*
+profile/
+*.prof
+
+
+# -----------------------------------------------------------------------------
+# 10. Testing, linting, type-checking and coverage caches
+# -----------------------------------------------------------------------------
+.pytest_cache/
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+junit.xml
+
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pyright/
+.pyre/
+.pytype/
+
+
+# -----------------------------------------------------------------------------
+# 11. Visualization and application temporary outputs
+# -----------------------------------------------------------------------------
+# Keep curated images/ and reports/ in Git. Ignore only transient files.
+/images/**/.DS_Store
+/images/**/*.tmp
+/images/**/*.temp
+/reports/**/*.tmp
+/reports/**/*.temp
+
+# Streamlit local caches and runtime secrets
+.streamlit/secrets.toml
+.streamlit/cache/
+
+# Static-site / documentation build caches
+.mintlify/
+.doctrees/
+
+
+# -----------------------------------------------------------------------------
+# 12. IDEs and code editors
+# -----------------------------------------------------------------------------
+# VS Code: keep shareable recommendations and settings templates if desired.
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Vim, Emacs and other editor swap/backup files
+*.swp
+*.swo
+*.orig
+*.rej
+
+
+# -----------------------------------------------------------------------------
+# 13. Operating-system metadata
+# -----------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+
+# -----------------------------------------------------------------------------
+# 14. Cloud, deployment and local tool state
+# -----------------------------------------------------------------------------
+.aws/
+.azure/
+.gcloud/
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+
+# Local Streamlit and general application state
+.streamlit/credentials.toml
+
+
+# -----------------------------------------------------------------------------
+# 15. Files that should normally remain version-controlled
+# -----------------------------------------------------------------------------
+# The following are deliberately NOT ignored:
+# - README.md, LICENSE, CITATION.cff and documentation in docs/
+# - requirements.txt, pyproject.toml and .env.example
+# - config/*.yaml templates (do not put secrets in these files)
+# - notebooks/*.ipynb (review and clear oversized/sensitive outputs first)
+# - src/, scripts/, app/, tests/ and .github/
+# - curated images/ and reports/
+# - small, reviewed metrics and metadata under artifacts/
+#
+# If a file is already tracked by Git, adding it to .gitignore does not remove
+# it from version control. Remove it from the Git index separately when needed.
