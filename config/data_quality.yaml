@@ -1,0 +1,2353 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# CENTRAL DATA QUALITY MANAGEMENT CONFIGURATION
+# =============================================================================
+#
+# Project:
+#   MandiLens India
+#
+# File:
+#   config/data_quality.yaml
+#
+# Purpose:
+#   Define comprehensive data-quality validation, anomaly detection,
+#   schema enforcement, data profiling, issue management, audit trails,
+#   quality scoring and reporting policies.
+#
+# Primary dataset:
+#   DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+#
+# Dataset profile:
+#   Publisher-reported records: 75,962,937
+#   Publisher-reported commodities: 389
+#   Reported format: Parquet
+#   Reported files: 26
+#
+# IMPORTANT:
+#   Publisher-reported statistics are not locally verified statistics.
+#   Actual schema, row counts and quality thresholds must be evaluated
+#   against the downloaded source files.
+#
+# DESIGN PRINCIPLES:
+#   1. Never modify original raw data.
+#   2. Validate all records, not just a random sample, for critical checks.
+#   3. Use partitioned and streaming-compatible validation.
+#   4. Never silently delete records.
+#   5. Preserve suspicious observations for investigation.
+#   6. Separate validation failures from analytical outliers.
+#   7. Track every correction and transformation.
+#   8. Prevent temporal leakage in machine-learning datasets.
+#   9. Maintain reproducible quality reports.
+#  10. Support incremental validation and historical re-auditing.
+#
+# STATUS:
+#   Configuration generated.
+#   Production validation pending.
+#
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURATION METADATA
+# -----------------------------------------------------------------------------
+
+metadata:
+
+  configuration_name: "MandiLens India Data Quality Framework"
+
+  configuration_version: "1.0.0"
+
+  schema_version: 1
+
+  configuration_status: "development"
+
+  project_name: "MandiLens India"
+
+  description: >
+    Central configuration for comprehensive data-quality
+    assessment and governance of Indian agricultural mandi
+    market price data.
+
+  primary_dataset_id: >
+    DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+
+  primary_source_id: "mandi_huggingface"
+
+  quality_framework: "rule_based_data_quality_management"
+
+  timezone: "Asia/Kolkata"
+
+  currency: "INR"
+
+  quality_policy_version: "1.0.0"
+
+
+# -----------------------------------------------------------------------------
+# 2. DATASET CONTEXT
+# -----------------------------------------------------------------------------
+
+dataset:
+
+  dataset_id: "mandi_india_daily_prices"
+
+  dataset_name: "India Mandi Daily Commodity Prices"
+
+  source_format: "parquet"
+
+  expected_source_directory: >
+    data/raw/mandi_india_daily_prices
+
+  staging_directory: >
+    data/temp/mandi_india_daily_prices
+
+  validated_directory: >
+    data/validated/mandi_india_daily_prices
+
+  quarantine_directory: >
+    data/temp/quarantine/mandi_india_daily_prices
+
+  rejected_directory: >
+    data/temp/rejected/mandi_india_daily_prices
+
+  publisher_reported_profile:
+
+    record_count: 75962937
+
+    distinct_commodities: 389
+
+    file_count: 26
+
+    start_year: 2001
+
+    end_year: 2026
+
+    profile_verification: "publisher_reported_not_locally_verified"
+
+  local_profile:
+
+    record_count: null
+
+    file_count: null
+
+    distinct_commodities: null
+
+    distinct_states: null
+
+    distinct_districts: null
+
+    distinct_markets: null
+
+    minimum_date: null
+
+    maximum_date: null
+
+    verification_status: "pending"
+
+  processing_requirements:
+
+    support_large_datasets: true
+
+    support_partitioned_parquet: true
+
+    support_incremental_validation: true
+
+    support_file_level_validation: true
+
+    support_batch_validation: true
+
+    support_full_dataset_validation: true
+
+    avoid_full_dataset_pandas_loading: true
+
+    preserve_original_partition_structure: true
+
+    process_all_available_records: true
+
+
+# -----------------------------------------------------------------------------
+# 3. VALIDATION ENGINE
+# -----------------------------------------------------------------------------
+
+validation_engine:
+
+  enabled: true
+
+  execution_mode: "hybrid_batch_and_incremental"
+
+  recommended_processing_engines:
+
+    primary: "DuckDB"
+
+    secondary: "Polars"
+
+    parquet_backend: "PyArrow"
+
+    pandas_usage: "small_audit_tables_and_summaries_only"
+
+  supported_formats:
+
+    - "parquet"
+
+  execution:
+
+    validate_before_processing: true
+
+    validate_before_feature_engineering: true
+
+    validate_before_model_training: true
+
+    validate_before_dashboard_publication: true
+
+    validate_after_data_transformation: true
+
+  processing:
+
+    batch_size_records: 500000
+
+    configurable_batch_size: true
+
+    process_files_independently: true
+
+    process_partitions_incrementally: true
+
+    use_lazy_execution_when_available: true
+
+    avoid_unnecessary_materialization: true
+
+    configurable_parallelism: true
+
+    maximum_concurrent_file_validations: 4
+
+    fail_fast_on_file_corruption: true
+
+    continue_independent_checks_when_safe: true
+
+  reproducibility:
+
+    deterministic_rules: true
+
+    version_validation_rules: true
+
+    record_execution_timestamp: true
+
+    record_software_versions: true
+
+    record_source_revision: true
+
+    record_input_file_checksums: true
+
+    record_validation_parameters: true
+
+
+# -----------------------------------------------------------------------------
+# 4. EXPECTED DATA SCHEMA
+# -----------------------------------------------------------------------------
+
+schema_validation:
+
+  enabled: true
+
+  validation_mode: "observed_schema_with_controlled_evolution"
+
+  schema_status: "initial_reference_pending_local_verification"
+
+  expected_columns:
+
+    State:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: true
+
+      criticality: "high"
+
+    District:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: true
+
+      criticality: "high"
+
+    Market:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: true
+
+      criticality: "high"
+
+    Commodity:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: true
+
+      criticality: "critical"
+
+    Variety:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: false
+
+      criticality: "medium"
+
+    Grade:
+
+      expected_type: "string"
+
+      nullable: true
+
+      required_for_market_analysis: false
+
+      criticality: "medium"
+
+    Arrival_Date:
+
+      expected_type: "date"
+
+      nullable: true
+
+      required_for_time_series_analysis: true
+
+      criticality: "critical"
+
+    Min_Price:
+
+      expected_type: "numeric"
+
+      nullable: true
+
+      required_for_price_analysis: true
+
+      criticality: "critical"
+
+    Max_Price:
+
+      expected_type: "numeric"
+
+      nullable: true
+
+      required_for_price_analysis: true
+
+      criticality: "critical"
+
+    Modal_Price:
+
+      expected_type: "numeric"
+
+      nullable: true
+
+      required_for_price_analysis: true
+
+      criticality: "critical"
+
+    Commodity_Code:
+
+      expected_type: "integer"
+
+      nullable: true
+
+      required_for_commodity_mapping: false
+
+      criticality: "medium"
+
+  schema_rules:
+
+    detect_missing_columns: true
+
+    detect_additional_columns: true
+
+    detect_renamed_columns: true
+
+    detect_type_changes: true
+
+    detect_nullability_changes: true
+
+    detect_column_order_changes: false
+
+    detect_duplicate_column_names: true
+
+    detect_incompatible_schema_changes: true
+
+    detect_parquet_metadata_errors: true
+
+    allow_additional_columns: true
+
+    allow_safe_type_promotion: true
+
+    allow_automatic_unsafe_type_conversion: false
+
+    require_manual_review_for_schema_changes: true
+
+    preserve_original_schema_snapshot: true
+
+  schema_evolution:
+
+    enabled: true
+
+    maintain_schema_versions: true
+
+    compare_against_baseline: true
+
+    generate_schema_diff: true
+
+    require_approval_for_breaking_changes: true
+
+    never_silently_drop_columns: true
+
+
+# -----------------------------------------------------------------------------
+# 5. FILE-LEVEL VALIDATION
+# -----------------------------------------------------------------------------
+
+file_validation:
+
+  enabled: true
+
+  checks:
+
+    file_exists: true
+
+    file_size_greater_than_zero: true
+
+    file_extension_valid: true
+
+    parquet_footer_readable: true
+
+    parquet_metadata_readable: true
+
+    parquet_schema_readable: true
+
+    parquet_row_groups_readable: true
+
+    parquet_data_readable: true
+
+    checksum_available: true
+
+    file_hash_calculated: true
+
+  integrity:
+
+    algorithm: "SHA256"
+
+    calculate_checksum: true
+
+    compare_with_source_checksum_when_available: true
+
+    detect_identical_files: true
+
+    detect_truncated_files: true
+
+    detect_corrupted_files: true
+
+    detect_duplicate_file_content: true
+
+  thresholds:
+
+    minimum_file_size_bytes: 1
+
+    maximum_file_size_bytes: null
+
+  failure_policy:
+
+    corrupted_file_severity: "critical"
+
+    quarantine_corrupted_files: true
+
+    exclude_unreadable_files_from_processing: true
+
+    preserve_original_corrupted_file: true
+
+    stop_pipeline_on_checksum_mismatch: true
+
+    generate_file_level_report: true
+
+
+# -----------------------------------------------------------------------------
+# 6. MISSING VALUE VALIDATION
+# -----------------------------------------------------------------------------
+
+missing_values:
+
+  enabled: true
+
+  calculation:
+
+    calculate_null_count: true
+
+    calculate_null_percentage: true
+
+    calculate_empty_string_count: true
+
+    calculate_whitespace_only_count: true
+
+    calculate_missing_by_column: true
+
+    calculate_missing_by_file: true
+
+    calculate_missing_by_year: true
+
+    calculate_missing_by_state: true
+
+    calculate_missing_by_commodity: true
+
+  global_thresholds:
+
+    acceptable_missing_percentage: 5.0
+
+    warning_missing_percentage: 5.0
+
+    high_missing_percentage: 15.0
+
+    critical_missing_percentage: 30.0
+
+  column_rules:
+
+    State:
+
+      allow_null: false
+      severity: "high"
+      action: "flag_and_quarantine_for_review"
+
+    District:
+
+      allow_null: false
+      severity: "high"
+      action: "flag_and_quarantine_for_review"
+
+    Market:
+
+      allow_null: false
+      severity: "high"
+      action: "flag_and_quarantine_for_review"
+
+    Commodity:
+
+      allow_null: false
+      severity: "critical"
+      action: "quarantine_for_review"
+
+    Variety:
+
+      allow_null: true
+      severity: "low"
+      action: "preserve_and_flag"
+
+    Grade:
+
+      allow_null: true
+      severity: "low"
+      action: "preserve_and_flag"
+
+    Arrival_Date:
+
+      allow_null: false
+      severity: "critical"
+      action: "quarantine_for_review"
+
+    Min_Price:
+
+      allow_null: false
+      severity: "critical"
+      action: "quarantine_for_review"
+
+    Max_Price:
+
+      allow_null: false
+      severity: "critical"
+      action: "quarantine_for_review"
+
+    Modal_Price:
+
+      allow_null: false
+      severity: "critical"
+      action: "quarantine_for_review"
+
+    Commodity_Code:
+
+      allow_null: true
+      severity: "medium"
+      action: "preserve_and_flag"
+
+  handling_policy:
+
+    preserve_original_nulls: true
+
+    automatic_null_deletion: false
+
+    automatic_mean_imputation: false
+
+    automatic_median_imputation: false
+
+    automatic_forward_fill: false
+
+    automatic_backward_fill: false
+
+    automatic_zero_replacement: false
+
+    record_all_imputation_operations: true
+
+    require_explicit_imputation_strategy: true
+
+
+# -----------------------------------------------------------------------------
+# 7. DUPLICATE RECORD DETECTION
+# -----------------------------------------------------------------------------
+
+duplicate_detection:
+
+  enabled: true
+
+  duplicate_types:
+
+    exact_row_duplicates:
+
+      enabled: true
+
+      compare_all_source_columns: true
+
+      severity: "high"
+
+      action: "flag_for_review"
+
+    business_key_duplicates:
+
+      enabled: true
+
+      candidate_key:
+
+        - "State"
+        - "District"
+        - "Market"
+        - "Commodity"
+        - "Variety"
+        - "Grade"
+        - "Arrival_Date"
+
+      key_status: "candidate_not_verified_unique"
+
+      compare_price_columns: true
+
+      severity: "high"
+
+      action: "investigate"
+
+    near_duplicates:
+
+      enabled: true
+
+      detect_whitespace_variations: true
+
+      detect_case_variations: true
+
+      detect_normalized_name_variations: true
+
+      severity: "medium"
+
+      action: "flag_for_review"
+
+  detection:
+
+    calculate_duplicate_count: true
+
+    calculate_duplicate_percentage: true
+
+    identify_source_files: true
+
+    preserve_duplicate_groups: true
+
+    detect_conflicting_duplicate_prices: true
+
+  removal_policy:
+
+    automatic_removal: false
+
+    preserve_original_records: true
+
+    require_duplicate_resolution: true
+
+    record_removed_record_identifiers: true
+
+    record_removal_reason: true
+
+    record_resolution_timestamp: true
+
+
+# -----------------------------------------------------------------------------
+# 8. DATA TYPE VALIDATION
+# -----------------------------------------------------------------------------
+
+data_type_validation:
+
+  enabled: true
+
+  string_columns:
+
+    - "State"
+    - "District"
+    - "Market"
+    - "Commodity"
+    - "Variety"
+    - "Grade"
+
+  numeric_columns:
+
+    - "Min_Price"
+    - "Max_Price"
+    - "Modal_Price"
+
+  integer_columns:
+
+    - "Commodity_Code"
+
+  date_columns:
+
+    - "Arrival_Date"
+
+  rules:
+
+    detect_invalid_numeric_values: true
+
+    detect_infinite_values: true
+
+    detect_nan_values: true
+
+    detect_invalid_date_values: true
+
+    detect_mixed_column_types: true
+
+    detect_unexpected_string_values_in_numeric_columns: true
+
+    preserve_original_values: true
+
+    record_conversion_failures: true
+
+    prohibit_silent_type_conversion: true
+
+  numeric_precision:
+
+    preserve_source_precision: true
+
+    round_during_validation: false
+
+    automatic_decimal_rounding: false
+
+
+# -----------------------------------------------------------------------------
+# 9. PRICE VALIDATION
+# -----------------------------------------------------------------------------
+
+price_validation:
+
+  enabled: true
+
+  price_columns:
+
+    - "Min_Price"
+    - "Max_Price"
+    - "Modal_Price"
+
+  price_metadata:
+
+    currency: "INR"
+
+    unit: null
+
+    unit_verification_status: "pending_source_documentation"
+
+    do_not_assume_price_unit: true
+
+    display_prices_only_after_unit_verification: true
+
+  fundamental_rules:
+
+    reject_non_numeric_prices: true
+
+    detect_null_prices: true
+
+    detect_negative_prices: true
+
+    detect_zero_prices: true
+
+    detect_infinite_prices: true
+
+    detect_extremely_large_prices: true
+
+    detect_price_relationship_violations: true
+
+    preserve_original_price_values: true
+
+  non_negative_prices:
+
+    enabled: true
+
+    rule: "price >= 0"
+
+    negative_price_severity: "critical"
+
+    zero_price_severity: "high"
+
+    zero_price_action: "flag_for_investigation"
+
+  price_relationships:
+
+    minimum_less_than_or_equal_to_maximum:
+
+      enabled: true
+
+      expression: "Min_Price <= Max_Price"
+
+      severity: "critical"
+
+    modal_within_minimum_and_maximum:
+
+      enabled: true
+
+      expression: >
+        Min_Price <= Modal_Price <= Max_Price
+
+      severity: "high"
+
+      exception_policy: >
+        Treat violations as suspicious observations requiring
+        investigation. Do not assume all source reporting anomalies
+        are invalid without checking source documentation.
+
+  price_bounds:
+
+    minimum_price:
+
+      value: 0
+
+      enabled: true
+
+    maximum_price:
+
+      value: null
+
+      enabled: false
+
+      reason: >
+        A defensible universal upper price limit has not yet
+        been established for all commodities and historical years.
+
+  statistical_price_checks:
+
+    enabled: true
+
+    methods:
+
+      - "IQR"
+
+      - "rolling_median_deviation"
+
+      - "commodity_specific_percentile"
+
+      - "historical_price_change"
+
+    calculate_by:
+
+      - "Commodity"
+      - "Variety"
+      - "Market"
+
+    minimum_observations_required: 30
+
+    extreme_percentile_thresholds:
+
+      lower: 0.001
+
+      upper: 0.999
+
+    action: "flag_not_automatically_remove"
+
+    record_detection_method: true
+
+    record_thresholds_used: true
+
+  price_change_detection:
+
+    enabled: true
+
+    calculate_absolute_change: true
+
+    calculate_percentage_change: true
+
+    compare_consecutive_observations: true
+
+    require_same_market_and_commodity: true
+
+    require_date_ordering: true
+
+    thresholds:
+
+      percentage_change_warning: 30.0
+
+      percentage_change_high: 60.0
+
+      percentage_change_critical: 100.0
+
+    action: "investigate_suspicious_price_change"
+
+    account_for_zero_previous_price: true
+
+    avoid_division_by_zero: true
+
+    do_not_treat_threshold_breach_as_proof_of_error: true
+
+
+# -----------------------------------------------------------------------------
+# 10. DATE AND TEMPORAL VALIDATION
+# -----------------------------------------------------------------------------
+
+date_validation:
+
+  enabled: true
+
+  date_column: "Arrival_Date"
+
+  expected_type: "date"
+
+  timezone: "Asia/Kolkata"
+
+  date_range:
+
+    expected_start: "2001-01-01"
+
+    expected_end: "2026-12-31"
+
+    range_source: "publisher_reported_coverage"
+
+    locally_verified: false
+
+    reject_before_expected_start: true
+
+    flag_after_expected_end: true
+
+    automatically_extend_expected_end: false
+
+  validation_rules:
+
+    detect_null_dates: true
+
+    detect_invalid_date_formats: true
+
+    detect_impossible_calendar_dates: true
+
+    detect_future_dates: true
+
+    detect_duplicate_dates_within_business_key: true
+
+    detect_out_of_order_dates: true
+
+    detect_missing_years: true
+
+    detect_missing_months: true
+
+    detect_missing_days: true
+
+    detect_unexpected_date_gaps: true
+
+  historical_coverage:
+
+    calculate_minimum_date: true
+
+    calculate_maximum_date: true
+
+    calculate_observation_count_by_year: true
+
+    calculate_observation_count_by_month: true
+
+    calculate_observation_count_by_day: true
+
+    detect_year_level_gaps: true
+
+    detect_month_level_gaps: true
+
+    detect_market_level_gaps: true
+
+    distinguish_missing_data_from_non_trading_days: true
+
+  date_gap_policy:
+
+    automatic_date_generation: false
+
+    automatic_forward_fill: false
+
+    automatic_backward_fill: false
+
+    preserve_missing_observation_gaps: true
+
+    account_for_market_holidays: true
+
+    require_trading_calendar_before_gap_classification: true
+
+
+# -----------------------------------------------------------------------------
+# 11. GEOGRAPHICAL VALIDATION
+# -----------------------------------------------------------------------------
+
+geographical_validation:
+
+  enabled: true
+
+  columns:
+
+    state: "State"
+
+    district: "District"
+
+    market: "Market"
+
+  checks:
+
+    detect_null_state: true
+
+    detect_null_district: true
+
+    detect_null_market: true
+
+    detect_whitespace_variations: true
+
+    detect_case_variations: true
+
+    detect_spelling_variations: true
+
+    detect_duplicate_market_names: true
+
+    detect_state_district_mismatches: true
+
+    detect_unrecognized_states: true
+
+    detect_unrecognized_districts: true
+
+  reference_data:
+
+    state_reference_file: null
+
+    district_reference_file: null
+
+    market_reference_file: null
+
+    reference_status: "not_configured"
+
+    require_reference_before_strict_geographical_validation: true
+
+  normalization:
+
+    preserve_original_names: true
+
+    create_standardized_geographical_names: true
+
+    use_approved_aliases_only: true
+
+    fuzzy_matching_requires_review: true
+
+  administrative_changes:
+
+    support_historical_district_boundaries: true
+
+    support_district_name_changes: true
+
+    preserve_original_administrative_names: true
+
+    maintain_geographical_reference_versions: true
+
+  severity:
+
+    missing_state: "high"
+
+    missing_district: "high"
+
+    missing_market: "high"
+
+    state_district_mismatch: "critical"
+
+    unrecognized_geography: "medium"
+
+
+# -----------------------------------------------------------------------------
+# 12. COMMODITY VALIDATION
+# -----------------------------------------------------------------------------
+
+commodity_validation:
+
+  enabled: true
+
+  source_column: "Commodity"
+
+  reference_configuration: "config/commodity_categories.yaml"
+
+  reference_status: "mapping_audit_pending"
+
+  checks:
+
+    detect_null_commodity_names: true
+
+    detect_empty_commodity_names: true
+
+    detect_whitespace_variations: true
+
+    detect_case_variations: true
+
+    detect_unmapped_commodities: true
+
+    detect_ambiguous_aliases: true
+
+    detect_conflicting_commodity_codes: true
+
+    detect_duplicate_standardized_names: true
+
+    detect_unknown_categories: true
+
+    detect_unknown_subcategories: true
+
+    detect_unexpected_new_commodities: true
+
+  mapping_rules:
+
+    require_approved_mappings: true
+
+    preserve_original_commodity_names: true
+
+    use_exact_matching_first: true
+
+    use_approved_aliases_second: true
+
+    use_unreviewed_fuzzy_matching: false
+
+    assign_unknown_to_unclassified: true
+
+    delete_unknown_commodities: false
+
+  commodity_code_validation:
+
+    source_column: "Commodity_Code"
+
+    detect_null_codes: true
+
+    detect_invalid_codes: true
+
+    detect_code_name_conflicts: true
+
+    verify_code_name_relationship: true
+
+    do_not_assume_code_is_globally_unique: true
+
+  variety_validation:
+
+    source_column: "Variety"
+
+    preserve_original_values: true
+
+    validate_independently: true
+
+    do_not_merge_into_commodity_identity: true
+
+  grade_validation:
+
+    source_column: "Grade"
+
+    preserve_original_values: true
+
+    validate_independently: true
+
+    do_not_merge_into_commodity_identity: true
+
+  severity:
+
+    unmapped_commodity: "medium"
+
+    conflicting_commodity_code: "high"
+
+    invalid_category_reference: "critical"
+
+    ambiguous_commodity_mapping: "high"
+
+
+# -----------------------------------------------------------------------------
+# 13. STATISTICAL ANOMALY DETECTION
+# -----------------------------------------------------------------------------
+
+anomaly_detection:
+
+  enabled: true
+
+  purpose: >
+    Identify unusual market price observations and suspicious
+    statistical patterns without automatically treating them
+    as invalid records.
+
+  methods:
+
+    interquartile_range:
+
+      enabled: true
+
+      multiplier: 1.5
+
+      extreme_multiplier: 3.0
+
+      grouping:
+
+        - "Commodity"
+        - "Market"
+
+    modified_z_score:
+
+      enabled: true
+
+      threshold: 3.5
+
+      minimum_observations: 30
+
+    rolling_median:
+
+      enabled: true
+
+      window_days: 30
+
+      minimum_observations: 7
+
+      deviation_threshold_percentage: 50.0
+
+    percentile_analysis:
+
+      enabled: true
+
+      lower_percentile: 0.1
+
+      upper_percentile: 99.9
+
+  grouping:
+
+    primary:
+
+      - "Commodity"
+      - "Market"
+
+    secondary:
+
+      - "Commodity"
+      - "State"
+
+  minimum_observations:
+
+    global: 30
+
+    commodity_market: 30
+
+  handling:
+
+    classify_as_suspicious_not_invalid: true
+
+    preserve_original_observation: true
+
+    require_investigation_before_exclusion: true
+
+    record_detection_algorithm: true
+
+    record_threshold: true
+
+    record_reference_group: true
+
+    prevent_outlier_based_automatic_deletion: true
+
+
+# -----------------------------------------------------------------------------
+# 14. CROSS-FIELD CONSISTENCY
+# -----------------------------------------------------------------------------
+
+cross_field_validation:
+
+  enabled: true
+
+  checks:
+
+    state_district_consistency:
+
+      enabled: true
+
+      severity: "critical"
+
+      require_geographical_reference: true
+
+    commodity_code_name_consistency:
+
+      enabled: true
+
+      severity: "high"
+
+      require_verified_code_registry: true
+
+    commodity_category_consistency:
+
+      enabled: true
+
+      severity: "high"
+
+      require_approved_commodity_mapping: true
+
+    price_relationship_consistency:
+
+      enabled: true
+
+      severity: "high"
+
+    date_price_consistency:
+
+      enabled: true
+
+      severity: "medium"
+
+      detect_unusual_temporal_patterns: true
+
+    variety_commodity_consistency:
+
+      enabled: true
+
+      severity: "medium"
+
+      require_reviewed_reference_data: true
+
+  handling:
+
+    never_silently_rewrite_source_values: true
+
+    record_conflicting_fields: true
+
+    generate_cross_field_issue_report: true
+
+
+# -----------------------------------------------------------------------------
+# 15. HISTORICAL AND TEMPORAL CONSISTENCY
+# -----------------------------------------------------------------------------
+
+historical_consistency:
+
+  enabled: true
+
+  checks:
+
+    compare_yearly_record_counts: true
+
+    compare_monthly_record_counts: true
+
+    compare_market_activity: true
+
+    compare_commodity_activity: true
+
+    detect_unusual_market_disappearance: true
+
+    detect_unusual_commodity_disappearance: true
+
+    detect_historical_schema_changes: true
+
+    detect_historical_name_changes: true
+
+    detect_historical_price_distribution_changes: true
+
+  comparison:
+
+    compare_with_previous_year: true
+
+    compare_with_previous_month: true
+
+    compare_with_historical_baseline: true
+
+    historical_baseline_period_years: 3
+
+  thresholds:
+
+    record_count_change_warning_percentage: 30.0
+
+    record_count_change_high_percentage: 60.0
+
+  policies:
+
+    distinguish_real_market_changes_from_data_errors: true
+
+    preserve_historical_records: true
+
+    require_investigation_before_exclusion: true
+
+
+# -----------------------------------------------------------------------------
+# 16. DATA DISTRIBUTION AND COVERAGE
+# -----------------------------------------------------------------------------
+
+distribution_validation:
+
+  enabled: true
+
+  profile_dimensions:
+
+    - "State"
+
+    - "District"
+
+    - "Market"
+
+    - "Commodity"
+
+    - "Variety"
+
+    - "Grade"
+
+    - "Arrival_Date"
+
+  calculate:
+
+    distinct_values: true
+
+    category_frequency: true
+
+    category_percentage: true
+
+    numerical_minimum: true
+
+    numerical_maximum: true
+
+    numerical_mean: true
+
+    numerical_median: true
+
+    numerical_standard_deviation: true
+
+    numerical_percentiles: true
+
+    date_coverage: true
+
+  detect:
+
+    unexpected_cardinality_changes: true
+
+    unexpected_category_disappearance: true
+
+    unexpected_new_categories: true
+
+    extreme_class_imbalance: true
+
+    abnormal_distribution_shift: true
+
+  output:
+
+    profile_by_file: true
+
+    profile_by_year: true
+
+    profile_by_state: true
+
+    profile_by_commodity: true
+
+    profile_by_market: true
+
+
+# -----------------------------------------------------------------------------
+# 17. MACHINE LEARNING READINESS VALIDATION
+# -----------------------------------------------------------------------------
+
+ml_readiness:
+
+  enabled: true
+
+  require_quality_gate_before_training: true
+
+  checks:
+
+    no_target_leakage: true
+
+    chronological_train_test_split: true
+
+    no_future_information_in_features: true
+
+    verify_target_column: true
+
+    verify_feature_data_types: true
+
+    verify_feature_missingness: true
+
+    detect_constant_features: true
+
+    detect_high_cardinality_features: true
+
+    detect_duplicate_training_records: true
+
+    validate_training_validation_test_overlap: true
+
+    preserve_temporal_order: true
+
+  forecasting:
+
+    target_column: "Modal_Price"
+
+    time_column: "Arrival_Date"
+
+    entity_grouping:
+
+      - "Market"
+      - "Commodity"
+
+    require_minimum_historical_observations: true
+
+    minimum_observations: 30
+
+    prevent_random_temporal_split: true
+
+    prevent_future_to_past_training: true
+
+    prevent_test_data_in_preprocessing: true
+
+    fit_transformers_on_training_data_only: true
+
+  limitations:
+
+    arrival_quantity_available: false
+
+    arrival_quantity_verification: "publisher_reported_not_available"
+
+    arrival_quantity_prediction_allowed: false
+
+    transport_cost_prediction_allowed: false
+
+    price_unit_verification_required: true
+
+
+# -----------------------------------------------------------------------------
+# 18. DATA CLEANING AND CORRECTION POLICY
+# -----------------------------------------------------------------------------
+
+cleaning_policy:
+
+  enabled: true
+
+  operating_mode: "non_destructive"
+
+  raw_data:
+
+    immutable: true
+
+    overwrite_allowed: false
+
+    delete_allowed: false
+
+  cleaning_operations:
+
+    trim_string_whitespace: true
+
+    standardize_unicode: true
+
+    normalize_comparison_case: true
+
+    standardize_commodity_names: true
+
+    standardize_geographical_names: true
+
+    convert_valid_dates: true
+
+    convert_valid_numeric_types: true
+
+  restricted_operations:
+
+    delete_null_rows: false
+
+    delete_duplicates_automatically: false
+
+    delete_price_outliers: false
+
+    replace_missing_prices_with_zero: false
+
+    replace_missing_prices_with_mean: false
+
+    replace_missing_prices_with_median: false
+
+    interpolate_market_prices_automatically: false
+
+    invent_missing_dates: false
+
+    silently_correct_invalid_prices: false
+
+  correction_tracking:
+
+    maintain_before_value: true
+
+    maintain_after_value: true
+
+    maintain_rule_id: true
+
+    maintain_reason: true
+
+    maintain_timestamp: true
+
+    maintain_processing_version: true
+
+    maintain_source_record_reference: true
+
+
+# -----------------------------------------------------------------------------
+# 19. ISSUE MANAGEMENT
+# -----------------------------------------------------------------------------
+
+issue_management:
+
+  enabled: true
+
+  severity_levels:
+
+    critical:
+
+      description: >
+        Issues that compromise data integrity or make a core
+        analytical operation unsafe.
+
+      pipeline_action: "block_affected_dataset"
+
+    high:
+
+      description: >
+        Major issues requiring investigation before the affected
+        records are accepted for important analysis.
+
+      pipeline_action: "quarantine_affected_records"
+
+    medium:
+
+      description: >
+        Suspicious or incomplete records that require monitoring
+        and potential manual review.
+
+      pipeline_action: "flag_and_report"
+
+    low:
+
+      description: >
+        Minor formatting or metadata inconsistencies.
+
+      pipeline_action: "report"
+
+    informational:
+
+      description: >
+        Observations that provide useful context without
+        necessarily representing a quality defect.
+
+      pipeline_action: "log"
+
+  issue_registry:
+
+    enabled: true
+
+    generate_unique_issue_id: true
+
+    record_rule_id: true
+
+    record_source_file: true
+
+    record_source_row_reference: true
+
+    record_column_name: true
+
+    record_original_value: true
+
+    record_detected_value: true
+
+    record_severity: true
+
+    record_detection_timestamp: true
+
+    record_resolution_status: true
+
+    record_resolution_reason: true
+
+  issue_statuses:
+
+    - "open"
+
+    - "under_review"
+
+    - "approved"
+
+    - "corrected"
+
+    - "excluded"
+
+    - "false_positive"
+
+    - "resolved"
+
+  issue_actions:
+
+    preserve_source_record: true
+
+    allow_manual_review: true
+
+    require_resolution_reason: true
+
+    maintain_issue_history: true
+
+
+# -----------------------------------------------------------------------------
+# 20. QUALITY SCORING FRAMEWORK
+# -----------------------------------------------------------------------------
+
+quality_scoring:
+
+  enabled: true
+
+  scoring_method: "weighted_dimension_score"
+
+  score_range:
+
+    minimum: 0
+
+    maximum: 100
+
+  dimensions:
+
+    completeness:
+
+      weight: 20
+
+      description: "Percentage of required fields with valid values."
+
+    validity:
+
+      weight: 20
+
+      description: "Compliance with data types and validation rules."
+
+    consistency:
+
+      weight: 20
+
+      description: "Agreement between related fields and references."
+
+    uniqueness:
+
+      weight: 15
+
+      description: "Absence of unintended duplicate records."
+
+    accuracy_proxy:
+
+      weight: 10
+
+      description: >
+        Internal plausibility and consistency checks.
+        This is not a measurement of ground-truth accuracy.
+
+    timeliness:
+
+      weight: 10
+
+      description: "Availability and freshness relative to source expectations."
+
+    integrity:
+
+      weight: 5
+
+      description: "File and dataset integrity verification."
+
+  calculation:
+
+    weights_must_sum_to_100: true
+
+    calculate_overall_score: true
+
+    calculate_dimension_scores: true
+
+    calculate_file_level_scores: true
+
+    calculate_partition_level_scores: true
+
+    calculate_dataset_level_score: true
+
+    exclude_unassessed_dimensions_from_interpretation: true
+
+    report_score_coverage: true
+
+  rating:
+
+    excellent:
+
+      minimum_score: 95
+
+      maximum_score: 100
+
+    good:
+
+      minimum_score: 85
+
+      maximum_score: 94.99
+
+    acceptable:
+
+      minimum_score: 70
+
+      maximum_score: 84.99
+
+    poor:
+
+      minimum_score: 50
+
+      maximum_score: 69.99
+
+    critical:
+
+      minimum_score: 0
+
+      maximum_score: 49.99
+
+  acceptance:
+
+    minimum_acceptable_score: 85
+
+    critical_issue_count_must_equal_zero: true
+
+    require_all_required_dimensions_assessed: true
+
+    permit_manual_override: true
+
+    manual_override_requires_reason: true
+
+    do_not_use_score_to_hide_critical_issues: true
+
+
+# -----------------------------------------------------------------------------
+# 21. DATASET ACCEPTANCE GATES
+# -----------------------------------------------------------------------------
+
+acceptance_gates:
+
+  enabled: true
+
+  stages:
+
+    raw_ingestion:
+
+      required:
+
+        - "file_exists"
+
+        - "file_size_valid"
+
+        - "parquet_metadata_readable"
+
+        - "checksum_recorded"
+
+      block_on_failure: true
+
+    schema_validation:
+
+      required:
+
+        - "expected_columns_inspected"
+
+        - "data_types_inspected"
+
+        - "schema_changes_documented"
+
+      block_on_failure: true
+
+    data_validation:
+
+      required:
+
+        - "missing_values_profiled"
+
+        - "duplicate_records_profiled"
+
+        - "price_rules_executed"
+
+        - "date_rules_executed"
+
+        - "commodity_rules_executed"
+
+        - "geographical_rules_executed"
+
+      block_on_failure: true
+
+    cleaning:
+
+      required:
+
+        - "cleaning_operations_logged"
+
+        - "original_data_preserved"
+
+        - "corrections_audited"
+
+      block_on_failure: true
+
+    machine_learning:
+
+      required:
+
+        - "target_validated"
+
+        - "feature_leakage_checked"
+
+        - "temporal_split_validated"
+
+        - "training_data_quality_approved"
+
+      block_on_failure: true
+
+  final_acceptance:
+
+    require_quality_report: true
+
+    require_validation_manifest: true
+
+    require_zero_unresolved_critical_issues: true
+
+    require_manual_review_of_high_severity_issues: true
+
+    require_source_provenance: true
+
+
+# -----------------------------------------------------------------------------
+# 22. INCREMENTAL VALIDATION
+# -----------------------------------------------------------------------------
+
+incremental_validation:
+
+  enabled: true
+
+  strategy: "file_and_partition_based"
+
+  identify_new_files: true
+
+  identify_modified_files: true
+
+  identify_deleted_remote_files: true
+
+  compare_file_checksums: true
+
+  validate_only_changed_files_when_safe: true
+
+  maintain_previous_validation_results: true
+
+  require_full_validation_after_schema_change: true
+
+  require_full_validation_after_rule_change: true
+
+  periodic_full_audit: true
+
+  full_audit_frequency: "monthly"
+
+  compare_incremental_results_with_baseline: true
+
+
+# -----------------------------------------------------------------------------
+# 23. REPORTING AND MONITORING
+# -----------------------------------------------------------------------------
+
+reporting:
+
+  enabled: true
+
+  report_directory: "reports/data_quality"
+
+  metadata_directory: "data/metadata/data_quality"
+
+  formats:
+
+    - "json"
+
+    - "csv"
+
+    - "html"
+
+  reports:
+
+    dataset_quality_summary:
+
+      enabled: true
+
+      filename: "dataset_quality_summary.json"
+
+    column_quality_report:
+
+      enabled: true
+
+      filename: "column_quality_report.csv"
+
+    missing_values_report:
+
+      enabled: true
+
+      filename: "missing_values_report.csv"
+
+    duplicate_report:
+
+      enabled: true
+
+      filename: "duplicate_records_report.csv"
+
+    price_validation_report:
+
+      enabled: true
+
+      filename: "price_validation_report.csv"
+
+    date_validation_report:
+
+      enabled: true
+
+      filename: "date_validation_report.csv"
+
+    commodity_validation_report:
+
+      enabled: true
+
+      filename: "commodity_validation_report.csv"
+
+    geographical_validation_report:
+
+      enabled: true
+
+      filename: "geographical_validation_report.csv"
+
+    anomaly_report:
+
+      enabled: true
+
+      filename: "price_anomaly_report.csv"
+
+    schema_report:
+
+      enabled: true
+
+      filename: "schema_validation_report.json"
+
+    issue_registry:
+
+      enabled: true
+
+      filename: "quality_issues.csv"
+
+    validation_manifest:
+
+      enabled: true
+
+      filename: "validation_manifest.json"
+
+    html_dashboard:
+
+      enabled: true
+
+      filename: "data_quality_dashboard.html"
+
+  visualizations:
+
+    enabled: true
+
+    save_plots: true
+
+    output_directory: "reports/data_quality/figures"
+
+    formats:
+
+      - "png"
+
+      - "html"
+
+    charts:
+
+      - "missing_value_distribution"
+
+      - "duplicate_record_distribution"
+
+      - "price_distribution"
+
+      - "price_outlier_distribution"
+
+      - "yearly_record_distribution"
+
+      - "commodity_quality_distribution"
+
+      - "state_quality_distribution"
+
+      - "quality_score_by_dimension"
+
+      - "validation_failure_distribution"
+
+      - "schema_change_history"
+
+  reporting_rules:
+
+    include_execution_timestamp: true
+
+    include_dataset_revision: true
+
+    include_file_count: true
+
+    include_record_count: true
+
+    include_quality_score: true
+
+    include_validation_status: true
+
+    include_issue_counts: true
+
+    include_unresolved_issues: true
+
+    include_failed_rules: true
+
+
+# -----------------------------------------------------------------------------
+# 24. AUDIT TRAIL AND GOVERNANCE
+# -----------------------------------------------------------------------------
+
+audit:
+
+  enabled: true
+
+  audit_directory: "data/metadata/data_quality/audit"
+
+  maintain_validation_history: true
+
+  maintain_rule_execution_history: true
+
+  maintain_cleaning_history: true
+
+  maintain_manual_review_history: true
+
+  record:
+
+    - "execution_id"
+
+    - "dataset_id"
+
+    - "source_revision"
+
+    - "input_file"
+
+    - "input_checksum"
+
+    - "rule_id"
+
+    - "rule_version"
+
+    - "execution_timestamp"
+
+    - "execution_duration"
+
+    - "records_processed"
+
+    - "records_flagged"
+
+    - "records_quarantined"
+
+    - "records_corrected"
+
+    - "validation_result"
+
+    - "software_versions"
+
+  immutable_audit_log: true
+
+  preserve_previous_audits: true
+
+  never_overwrite_historical_audits: true
+
+
+# -----------------------------------------------------------------------------
+# 25. PERFORMANCE AND RESOURCE MANAGEMENT
+# -----------------------------------------------------------------------------
+
+performance:
+
+  enabled: true
+
+  processing_strategy: "memory_efficient_columnar_processing"
+
+  preferred_engines:
+
+    - "DuckDB"
+
+    - "Polars"
+
+    - "PyArrow"
+
+  pandas:
+
+    use_for_full_dataset: false
+
+    use_for_small_reports: true
+
+    use_for_sample_analysis: true
+
+  optimization:
+
+    use_column_projection: true
+
+    use_predicate_pushdown: true
+
+    use_lazy_execution: true
+
+    avoid_repeated_full_dataset_scans: true
+
+    reuse_validated_metadata: true
+
+    cache_safe_intermediate_results: true
+
+    use_partition_pruning: true
+
+    use_parallel_file_processing: true
+
+  resource_limits:
+
+    batch_size_records: 500000
+
+    maximum_concurrent_file_validations: 4
+
+    memory_limit: "configurable"
+
+    cpu_threads: "configurable"
+
+    spill_to_disk_when_required: true
+
+    temporary_directory: "data/temp/data_quality"
+
+  logging:
+
+    log_execution_duration: true
+
+    log_memory_usage: true
+
+    log_processed_records: true
+
+    log_processing_throughput: true
+
+    log_failed_batches: true
+
+
+# -----------------------------------------------------------------------------
+# 26. ERROR HANDLING
+# -----------------------------------------------------------------------------
+
+error_handling:
+
+  enabled: true
+
+  retry_transient_errors: true
+
+  maximum_retries: 3
+
+  exponential_backoff: true
+
+  record_exception_details: true
+
+  preserve_failed_batch_information: true
+
+  preserve_failed_file_information: true
+
+  continue_after_noncritical_errors: true
+
+  stop_on_critical_integrity_errors: true
+
+  stop_on_unrecoverable_schema_errors: true
+
+  prevent_partial_results_from_being_marked_approved: true
+
+  error_directory: "logs/data_quality/errors"
+
+
+# -----------------------------------------------------------------------------
+# 27. SECURITY AND PRIVACY
+# -----------------------------------------------------------------------------
+
+security:
+
+  enabled: true
+
+  never_log_api_credentials: true
+
+  never_log_environment_secrets: true
+
+  restrict_raw_data_modification: true
+
+  preserve_original_source_files: true
+
+  validate_external_reference_files: true
+
+  prevent_untrusted_yaml_execution: true
+
+  record_access_to_sensitive_files: true
+
+
+# -----------------------------------------------------------------------------
+# 28. IMPLEMENTATION STATUS
+# -----------------------------------------------------------------------------
+
+implementation_status:
+
+  metadata_defined: true
+
+  validation_engine_defined: true
+
+  schema_rules_defined: true
+
+  file_integrity_rules_defined: true
+
+  missing_value_rules_defined: true
+
+  duplicate_detection_defined: true
+
+  data_type_rules_defined: true
+
+  price_validation_defined: true
+
+  date_validation_defined: true
+
+  geographical_validation_defined: true
+
+  commodity_validation_defined: true
+
+  anomaly_detection_defined: true
+
+  cross_field_validation_defined: true
+
+  historical_consistency_defined: true
+
+  ml_readiness_defined: true
+
+  cleaning_policy_defined: true
+
+  issue_management_defined: true
+
+  quality_scoring_defined: true
+
+  acceptance_gates_defined: true
+
+  incremental_validation_defined: true
+
+  reporting_defined: true
+
+  audit_trail_defined: true
+
+  actual_dataset_validation_completed: false
+
+  production_validation_engine_implemented: false
+
+  ready_for_validation_engine_development: true
+
+
+# =============================================================================
+# END OF DATA QUALITY CONFIGURATION
+# =============================================================================

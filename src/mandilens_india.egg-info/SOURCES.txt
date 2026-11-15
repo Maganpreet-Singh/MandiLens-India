@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/mandilens/__init__.py
+src/mandilens/ingestion/huggingface_loader.py
+src/mandilens/utils/config.py
+src/mandilens/utils/logger.py
+src/mandilens/utils/paths.py
+src/mandilens_india.egg-info/PKG-INFO
+src/mandilens_india.egg-info/SOURCES.txt
+src/mandilens_india.egg-info/dependency_links.txt
+src/mandilens_india.egg-info/top_level.txt

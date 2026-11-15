@@ -1,0 +1,2161 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# Agricultural Market Analytics, Price Forecasting & Decision-Support Platform
+#
+# File: config/model_config.yaml
+# Purpose:
+#   Central configuration for time-series forecasting, model development,
+#   training, validation, evaluation, tuning, inference and model monitoring.
+#
+# Design principles:
+#   1. Support large-scale panel time-series forecasting.
+#   2. Establish strong statistical baselines before advanced models.
+#   3. Prevent temporal leakage throughout feature engineering and evaluation.
+#   4. Support global models trained across multiple markets and commodities.
+#   5. Keep external data sources optional until their availability is verified.
+#   6. Maintain reproducibility and traceability of every model run.
+#
+# IMPORTANT:
+#   Column names and target definitions below are candidate mappings.
+#   Verify them against the actual downloaded dataset before training.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURATION METADATA
+# -----------------------------------------------------------------------------
+
+metadata:
+  project_name: "MandiLens India"
+  configuration_name: "model_config"
+  configuration_version: "1.0.0"
+  environment: "development"
+
+  description: >
+    Central model configuration for agricultural market price forecasting,
+    including baseline forecasting, statistical models, machine learning,
+    optional deep learning, model evaluation and inference.
+
+  maintained_by: "MandiLens India Engineering Team"
+
+  created_date: "2026-11-09"
+  last_updated: "2026-11-09"
+
+  configuration_status: "development"
+  production_approved: false
+
+  related_configurations:
+    project: "config/project_config.yaml"
+    data_sources: "config/data_sources.yaml"
+    commodity_categories: "config/commodity_categories.yaml"
+    data_quality: "config/data_quality.yaml"
+
+
+# -----------------------------------------------------------------------------
+# 2. FORECASTING PROBLEM DEFINITION
+# -----------------------------------------------------------------------------
+
+task:
+  task_name: "agricultural_market_price_forecasting"
+
+  problem_type: "panel_time_series_forecasting"
+
+  learning_paradigm: "supervised_learning"
+
+  forecasting_architecture: "global_panel_model"
+
+  objective: >
+    Forecast agricultural commodity prices across Indian agricultural
+    markets using historical market observations and, where verified,
+    additional contextual and exogenous variables.
+
+  business_objectives:
+    - "Estimate future commodity prices."
+    - "Identify price trends across agricultural markets."
+    - "Support market-to-market price comparisons."
+    - "Provide forecast uncertainty where supported."
+    - "Support data-driven agricultural trading decisions."
+    - "Identify unusual market price movements."
+
+  primary_use_cases:
+    - "Commodity price forecasting"
+    - "Market-level price trend analysis"
+    - "Multi-horizon price prediction"
+    - "Market comparison"
+    - "Commodity-specific forecasting"
+    - "Forecast uncertainty estimation"
+
+
+# -----------------------------------------------------------------------------
+# 3. FORECAST TARGET CONFIGURATION
+# -----------------------------------------------------------------------------
+
+target:
+  name: "modal_price_forecast"
+
+  column: "Modal_Price"
+
+  column_status: "candidate_pending_source_schema_verification"
+
+  description: >
+    The candidate target is the modal market price recorded for a commodity
+    on a particular arrival date.
+
+  target_type: "continuous"
+
+  prediction_type: "regression"
+
+  unit:
+    value: null
+    status: "pending_source_documentation"
+
+  currency:
+    value: "INR"
+    status: "verify_against_source_documentation"
+
+  target_transformation:
+    enabled: false
+    method: "none"
+
+    alternatives:
+      - "log1p"
+      - "standard_scaling"
+      - "robust_scaling"
+
+    selection_policy: >
+      Select a transformation only after examining the target distribution,
+      non-positive values, model assumptions and inverse-transform behavior.
+
+  target_validation:
+    require_numeric: true
+    reject_infinite_values: true
+    reject_nan_values: true
+
+    negative_values:
+      policy: "exclude_critical_invalid_records"
+      reference: "config/data_quality.yaml"
+
+    zero_values:
+      policy: "follow_data_quality_policy"
+      require_investigation: true
+
+    upper_bound:
+      enabled: false
+      value: null
+      reason: "No verified universal agricultural price upper bound."
+
+  inverse_transformation:
+    required_when_transformed: true
+    preserve_original_scale: true
+
+
+# -----------------------------------------------------------------------------
+# 4. TIME AND PANEL IDENTIFICATION
+# -----------------------------------------------------------------------------
+
+time_series:
+  date_column: "Arrival_Date"
+
+  date_column_status: "candidate_pending_source_schema_verification"
+
+  date_format: "auto"
+
+  timezone: "Asia/Kolkata"
+
+  calendar_type: "market_observation_calendar"
+
+  observation_frequency:
+    value: "observed_market_day"
+    status: "pending_dataset_profiling"
+
+    supported_frequencies:
+      - "daily"
+      - "weekly"
+      - "monthly"
+      - "observed_market_day"
+
+    note: >
+      Do not assume every market reports prices every calendar day.
+      Missing calendar dates may reflect non-trading days, market holidays,
+      closures or absent observations.
+
+  panel_configuration:
+    enabled: true
+
+    panel_type: "multi_market_multi_commodity"
+
+    # Candidate series identity.
+    # Confirm the final grain after inspecting duplicate records and
+    # the availability of variety and grade information.
+    series_key_columns:
+      - "State"
+      - "District"
+      - "Market"
+      - "Commodity"
+
+    optional_series_dimensions:
+      - "Variety"
+      - "Grade"
+
+    optional_dimensions_enabled: false
+
+    optional_dimension_policy: >
+      Enable Variety or Grade as additional series dimensions only after
+      assessing coverage, consistency, missingness and historical depth.
+
+    series_identifier:
+      method: "deterministic_composite_key"
+      null_component_policy: "explicit_null_token"
+      persist_mapping: true
+
+    grouping_policy:
+      sort_by:
+        - "Arrival_Date"
+
+      maintain_independent_histories: true
+      prevent_cross_market_lag_features: true
+      prevent_cross_commodity_lag_features: true
+
+  horizon:
+    # Horizons are measured in observations within each market series.
+    # They are not automatically equivalent to calendar days.
+    unit: "market_observation_steps"
+
+    values:
+      - 1
+      - 7
+      - 14
+      - 30
+
+    enabled: true
+
+    default_horizon: 7
+
+    note: >
+      Convert observation-step forecasts into calendar-date forecasts only
+      after implementing a verified market calendar and forecasting policy
+      for dates without market observations.
+
+  forecast_strategy:
+    supported:
+      - "recursive"
+      - "direct"
+      - "multi_output"
+
+    default: "direct"
+
+    rationale: >
+      Direct forecasting can reduce recursive error accumulation for
+      multi-step forecasts. Evaluate its computational cost and performance
+      against recursive forecasting before selecting the final strategy.
+
+
+# -----------------------------------------------------------------------------
+# 5. INPUT DATA CONTRACT
+# -----------------------------------------------------------------------------
+
+data:
+  source_table:
+    logical_name: "validated_agricultural_market_prices"
+
+    expected_storage_format:
+      - "parquet"
+
+    preferred_processing_engines:
+      - "duckdb"
+      - "polars"
+      - "pyarrow"
+
+    pandas_usage:
+      allowed_for:
+        - "small_validation_samples"
+        - "compact_evaluation_reports"
+        - "small_visualization_datasets"
+
+      full_dataset_loading: false
+
+  expected_columns:
+    geography:
+      - "State"
+      - "District"
+      - "Market"
+
+    commodity:
+      - "Commodity"
+      - "Variety"
+      - "Grade"
+      - "Commodity_Code"
+
+    time:
+      - "Arrival_Date"
+
+    price:
+      - "Min_Price"
+      - "Max_Price"
+      - "Modal_Price"
+
+    status: "candidate_schema_pending_local_verification"
+
+  required_training_columns:
+    - "State"
+    - "District"
+    - "Market"
+    - "Commodity"
+    - "Arrival_Date"
+    - "Modal_Price"
+
+  optional_training_columns:
+    - "Variety"
+    - "Grade"
+    - "Commodity_Code"
+    - "Min_Price"
+    - "Max_Price"
+
+  external_features:
+    enabled: false
+
+    status: "not_yet_integrated"
+
+    candidate_sources:
+      weather:
+        enabled: false
+        examples:
+          - "temperature"
+          - "rainfall"
+          - "humidity"
+
+      agricultural_supply:
+        enabled: false
+        examples:
+          - "market_arrivals"
+          - "commodity_arrival_quantity"
+          - "production_estimates"
+
+      calendar:
+        enabled: false
+        examples:
+          - "market_holidays"
+          - "regional_festivals"
+          - "harvest_periods"
+
+      logistics:
+        enabled: false
+        examples:
+          - "transport_cost"
+          - "fuel_price"
+
+    integration_rules:
+      require_source_provenance: true
+      require_observation_timestamp: true
+      prevent_future_information: true
+      record_feature_availability_time: true
+
+    note: >
+      External feature names are examples, not confirmed dataset columns.
+      In particular, do not assume arrival quantity is available in the
+      source dataset.
+
+
+# -----------------------------------------------------------------------------
+# 6. DATA ELIGIBILITY FOR MODEL TRAINING
+# -----------------------------------------------------------------------------
+
+training_data:
+  input_status_required:
+    - "validated"
+    - "quality_accepted"
+
+  enforce_data_quality_config: true
+
+  data_quality_config: "config/data_quality.yaml"
+
+  reject_critical_quality_failures: true
+
+  preserve_source_records: true
+
+  feature_generation:
+    enabled: true
+
+    processing_engine: "polars"
+
+    large_scale_execution_engine: "duckdb"
+
+    materialize_features: true
+
+    output_format: "parquet"
+
+    partition_columns:
+      - "State"
+      - "Commodity"
+
+    sort_columns:
+      - "State"
+      - "District"
+      - "Market"
+      - "Commodity"
+      - "Arrival_Date"
+
+  eligibility:
+    minimum_history_observations: 60
+
+    history_threshold_status: "initial_tunable_threshold"
+
+    insufficient_history_policy: "fallback_to_baseline"
+
+    allow_short_series_for_baselines: true
+
+    allow_missing_optional_features: true
+
+    require_valid_target: true
+
+  duplicate_handling:
+    policy: "follow_data_quality_pipeline"
+
+    automatic_duplicate_deletion: false
+
+    note: >
+      Do not resolve potentially meaningful duplicate records by arbitrary
+      deletion or averaging. Apply an approved aggregation rule only after
+      the meaning of the duplicate records is understood.
+
+
+# -----------------------------------------------------------------------------
+# 7. FEATURE ENGINEERING
+# -----------------------------------------------------------------------------
+
+features:
+  enabled: true
+
+  feature_generation_mode: "grouped_temporal"
+
+  leakage_prevention:
+    enabled: true
+
+    sort_before_feature_generation: true
+
+    shift_target_before_rolling: true
+
+    use_only_information_available_at_forecast_origin: true
+
+    use_future_target_values: false
+
+    fit_transformers_on_training_data_only: true
+
+    fit_encoders_on_training_data_only: true
+
+  # ---------------------------------------------------------------------------
+  # 7.1 Historical price features
+  # ---------------------------------------------------------------------------
+
+  lag_features:
+    enabled: true
+
+    source_column: "Modal_Price"
+
+    lags:
+      - 1
+      - 2
+      - 3
+      - 7
+      - 14
+      - 21
+      - 28
+
+    lag_unit: "previous_observations"
+
+    group_by:
+      - "State"
+      - "District"
+      - "Market"
+      - "Commodity"
+
+  # ---------------------------------------------------------------------------
+  # 7.2 Rolling statistics
+  # ---------------------------------------------------------------------------
+
+  rolling_features:
+    enabled: true
+
+    windows:
+      - 7
+      - 14
+      - 28
+
+    window_unit: "previous_observations"
+
+    statistics:
+      - "mean"
+      - "median"
+      - "std"
+      - "min"
+      - "max"
+
+    shift_before_calculation: 1
+
+    min_periods: 3
+
+    group_by:
+      - "State"
+      - "District"
+      - "Market"
+      - "Commodity"
+
+  # ---------------------------------------------------------------------------
+  # 7.3 Price movement features
+  # ---------------------------------------------------------------------------
+
+  price_movement:
+    enabled: true
+
+    features:
+      percentage_change:
+        enabled: true
+        periods:
+          - 1
+          - 7
+          - 14
+
+      absolute_change:
+        enabled: true
+        periods:
+          - 1
+          - 7
+          - 14
+
+      momentum:
+        enabled: true
+        periods:
+          - 7
+          - 14
+          - 28
+
+    protect_against_division_by_zero: true
+
+  # ---------------------------------------------------------------------------
+  # 7.4 Calendar features
+  # ---------------------------------------------------------------------------
+
+  calendar_features:
+    enabled: true
+
+    features:
+      year: true
+      month: true
+      quarter: true
+      day_of_month: true
+      day_of_week: true
+      day_of_year: true
+      week_of_year: true
+      is_month_start: true
+      is_month_end: true
+
+    market_calendar_features:
+      enabled: false
+
+      require_verified_market_calendar: true
+
+      features:
+        - "is_market_open"
+        - "days_since_previous_market_session"
+        - "days_until_next_market_session"
+
+    note: >
+      Calendar features must be generated from the actual date and verified
+      market calendar. Do not treat absent records as zero-price observations.
+
+  # ---------------------------------------------------------------------------
+  # 7.5 Geographic and commodity features
+  # ---------------------------------------------------------------------------
+
+  categorical_features:
+    enabled: true
+
+    columns:
+      - "State"
+      - "District"
+      - "Market"
+      - "Commodity"
+
+    optional_columns:
+      - "Variety"
+      - "Grade"
+
+    encoding:
+      default: "model_specific"
+
+      supported:
+        - "native_categorical"
+        - "ordinal"
+        - "target_encoding"
+        - "one_hot"
+
+      prevent_target_leakage: true
+
+      target_encoding:
+        enabled: false
+        use_out_of_fold_statistics: true
+        chronological_validation_required: true
+
+    high_cardinality:
+      market:
+        strategy: "model_specific"
+
+      commodity:
+        strategy: "model_specific"
+
+  # ---------------------------------------------------------------------------
+  # 7.6 Price range features
+  # ---------------------------------------------------------------------------
+
+  price_range_features:
+    enabled: true
+
+    source_columns:
+      - "Min_Price"
+      - "Max_Price"
+      - "Modal_Price"
+
+    candidate_features:
+      - "price_range"
+      - "price_range_ratio"
+      - "modal_price_position"
+
+    availability_status: "pending_schema_and_quality_verification"
+
+    historical_availability_only: true
+
+    do_not_use_unavailable_future_values: true
+
+  # ---------------------------------------------------------------------------
+  # 7.7 Exogenous features
+  # ---------------------------------------------------------------------------
+
+  exogenous_features:
+    enabled: false
+
+    availability_requirement: "verified_external_data"
+
+    candidate_features:
+      - "rainfall"
+      - "temperature"
+      - "humidity"
+      - "market_arrival_quantity"
+      - "transport_cost"
+
+    require_forecast_time_alignment: true
+
+    note: >
+      Only use values that would genuinely be available at the time the
+      forecast is issued. Actual future weather, arrivals or market values
+      must not leak into historical training features.
+
+
+# -----------------------------------------------------------------------------
+# 8. PREPROCESSING CONFIGURATION
+# -----------------------------------------------------------------------------
+
+preprocessing:
+  enabled: true
+
+  numerical:
+    enabled: true
+
+    missing_value_strategy: "model_specific"
+
+    candidate_methods:
+      - "median"
+      - "forward_fill_within_series"
+      - "no_imputation"
+
+    scaling:
+      enabled: false
+
+      default_method: "none"
+
+      supported:
+        - "standard_scaler"
+        - "robust_scaler"
+        - "min_max_scaler"
+
+      apply_only_when_required: true
+
+  categorical:
+    enabled: true
+
+    missing_value_strategy: "explicit_unknown_category"
+
+    normalize_whitespace: true
+
+    normalize_case: false
+
+  temporal:
+    enabled: true
+
+    parse_dates: true
+
+    chronological_sort: true
+
+    duplicate_timestamp_policy: "follow_data_quality_config"
+
+    missing_calendar_dates:
+      automatic_zero_filling: false
+      automatic_forward_filling: false
+
+  preprocessing_artifacts:
+    save_transformers: true
+    save_encoders: true
+    save_feature_schema: true
+    save_feature_order: true
+
+
+# -----------------------------------------------------------------------------
+# 9. MODEL DEVELOPMENT STRATEGY
+# -----------------------------------------------------------------------------
+
+model_strategy:
+  development_approach: "baseline_first_then_advanced_models"
+
+  model_selection_principle: >
+    A complex model should only be promoted when it demonstrates a reliable
+    improvement over appropriate baseline models on chronological holdout
+    data and across relevant market and commodity segments.
+
+  tiers:
+
+    tier_1_baseline:
+      enabled: true
+      purpose: "establish_reference_performance"
+
+    tier_2_statistical:
+      enabled: true
+      purpose: "evaluate_traditional_time_series_models"
+
+    tier_3_machine_learning:
+      enabled: true
+      purpose: "train_global_tabular_forecasting_models"
+
+    tier_4_deep_learning:
+      enabled: false
+      purpose: "advanced_research_and_experimental_forecasting"
+
+  champion_selection:
+    enabled: true
+
+    selection_metric: "wape"
+
+    require_baseline_comparison: true
+
+    require_temporal_holdout_evaluation: true
+
+    require_segment_level_evaluation: true
+
+    allow_automatic_promotion: false
+
+    human_approval_for_production: true
+
+
+# -----------------------------------------------------------------------------
+# 10. BASELINE FORECASTING MODELS
+# -----------------------------------------------------------------------------
+
+baseline_models:
+
+  naive:
+    enabled: true
+
+    model_type: "last_observation"
+
+    description: >
+      Predict the next observation using the latest valid observed price
+      for the same market and commodity series.
+
+    fallback_required: true
+
+  seasonal_naive:
+    enabled: true
+
+    model_type: "seasonal_last_observation"
+
+    seasonal_period: 7
+
+    seasonal_period_unit: "previous_observations"
+
+    description: >
+      Reuse a historical observation from a configurable seasonal position.
+      This is an observation-based approximation and does not establish
+      actual weekly seasonality without validation.
+
+    minimum_history_required: 14
+
+  moving_average:
+    enabled: true
+
+    windows:
+      - 3
+      - 7
+      - 14
+
+    aggregation: "mean"
+
+    use_only_prior_observations: true
+
+  drift:
+    enabled: true
+
+    method: "historical_linear_drift"
+
+    use_only_prior_observations: true
+
+
+# -----------------------------------------------------------------------------
+# 11. STATISTICAL TIME-SERIES MODELS
+# -----------------------------------------------------------------------------
+
+statistical_models:
+
+  arima:
+    enabled: false
+
+    library: "statsmodels"
+
+    model_family: "ARIMA"
+
+    order:
+      p: 1
+      d: 1
+      q: 1
+
+    seasonal:
+      enabled: false
+
+    minimum_history_required: 60
+
+    use_for:
+      - "individual_series_benchmarking"
+      - "selected_high_coverage_series"
+
+    limitations:
+      - "Repeated fitting across millions of series can be expensive."
+      - "Order selection requires careful validation."
+      - "Short or irregular series may not support stable estimation."
+
+  auto_arima:
+    enabled: false
+
+    library: "pmdarima"
+
+    automatic_order_selection: true
+
+    seasonal: false
+
+    stepwise: true
+
+    maximum_p: 5
+    maximum_d: 2
+    maximum_q: 5
+
+    maximum_search_iterations: 50
+
+    minimum_history_required: 60
+
+    use_for:
+      - "selected_series_experiments"
+
+    note: >
+      Do not run automatic order search indiscriminately across all series.
+      Apply it to selected representative series or controlled samples.
+
+  exponential_smoothing:
+    enabled: false
+
+    library: "statsmodels"
+
+    model_family: "ETS"
+
+    trend:
+      options:
+        - null
+        - "add"
+
+      default: "add"
+
+    seasonal:
+      enabled: false
+      options:
+        - null
+        - "add"
+
+    minimum_history_required: 60
+
+    use_for:
+      - "selected_series_benchmarking"
+
+
+# -----------------------------------------------------------------------------
+# 12. MACHINE LEARNING MODELS
+# -----------------------------------------------------------------------------
+
+machine_learning_models:
+
+  training_formulation:
+    type: "global_supervised_regression"
+
+    training_population: "eligible_market_commodity_observations"
+
+    target: "Modal_Price"
+
+    feature_source: "features"
+
+    group_aware_feature_generation: true
+
+    chronological_training_data: true
+
+  # ---------------------------------------------------------------------------
+  # 12.1 LightGBM
+  # ---------------------------------------------------------------------------
+
+  lightgbm:
+    enabled: true
+
+    role: "primary_machine_learning_candidate"
+
+    library: "lightgbm"
+
+    estimator: "LGBMRegressor"
+
+    objective: "regression"
+
+    boosting_type: "gbdt"
+
+    parameters:
+      n_estimators: 1000
+      learning_rate: 0.03
+      num_leaves: 31
+      max_depth: -1
+      min_child_samples: 30
+
+      subsample: 0.8
+      subsample_freq: 1
+      colsample_bytree: 0.8
+
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+
+      random_state: 42
+
+      verbosity: -1
+
+    early_stopping:
+      enabled: true
+      stopping_rounds: 100
+      use_validation_set: true
+
+    categorical_handling:
+      use_native_categorical_when_supported: true
+
+    class_of_model: "global_panel_forecaster"
+
+    use_for:
+      - "global_market_price_forecasting"
+      - "multi_commodity_forecasting"
+      - "multi_horizon_forecasting"
+
+  # ---------------------------------------------------------------------------
+  # 12.2 XGBoost
+  # ---------------------------------------------------------------------------
+
+  xgboost:
+    enabled: false
+
+    role: "alternative_gradient_boosting_model"
+
+    library: "xgboost"
+
+    estimator: "XGBRegressor"
+
+    objective: "reg:squarederror"
+
+    parameters:
+      n_estimators: 1000
+      learning_rate: 0.03
+      max_depth: 8
+
+      min_child_weight: 5
+
+      subsample: 0.8
+      colsample_bytree: 0.8
+
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+
+      random_state: 42
+
+      n_jobs: -1
+
+    early_stopping:
+      enabled: true
+      use_validation_set: true
+
+    use_for:
+      - "comparison_with_lightgbm"
+      - "controlled_model_experiments"
+
+  # ---------------------------------------------------------------------------
+  # 12.3 CatBoost
+  # ---------------------------------------------------------------------------
+
+  catboost:
+    enabled: false
+
+    role: "categorical_feature_aware_alternative"
+
+    library: "catboost"
+
+    estimator: "CatBoostRegressor"
+
+    loss_function: "RMSE"
+
+    parameters:
+      iterations: 1000
+      learning_rate: 0.03
+      depth: 8
+
+      l2_leaf_reg: 3
+
+      random_seed: 42
+      verbose: false
+      allow_writing_files: false
+
+    categorical_features:
+      use_native_categorical: true
+
+    early_stopping:
+      enabled: true
+      patience: 100
+
+    use_for:
+      - "high_cardinality_categorical_experiments"
+      - "comparison_with_lightgbm"
+
+  model_comparison:
+    enabled: true
+
+    candidates:
+      - "lightgbm"
+      - "xgboost"
+      - "catboost"
+
+    compare_against_baselines: true
+
+    compare_on_identical_temporal_splits: true
+
+    compare_on_identical_eligible_observations: true
+
+
+# -----------------------------------------------------------------------------
+# 13. DEEP LEARNING MODELS
+# -----------------------------------------------------------------------------
+
+deep_learning_models:
+
+  enabled: false
+
+  activation_status: "future_experimental_phase"
+
+  framework:
+    preferred: "pytorch"
+
+  requirements_before_activation:
+    - "Reliable baseline metrics must exist."
+    - "Feature and target pipelines must be validated."
+    - "Chronological evaluation must be implemented."
+    - "Training resource requirements must be measured."
+    - "The model must justify its added complexity."
+
+  lstm:
+    enabled: false
+
+    architecture: "LSTM"
+
+    framework: "pytorch"
+
+    input_window: 28
+
+    hidden_size: 128
+
+    num_layers: 2
+
+    dropout: 0.2
+
+    bidirectional: false
+
+    output_horizons:
+      - 1
+      - 7
+      - 14
+      - 30
+
+  gru:
+    enabled: false
+
+    architecture: "GRU"
+
+    framework: "pytorch"
+
+    input_window: 28
+
+    hidden_size: 128
+
+    num_layers: 2
+
+    dropout: 0.2
+
+  temporal_fusion_transformer:
+    enabled: false
+
+    architecture: "TemporalFusionTransformer"
+
+    framework: "pytorch_forecasting"
+
+    use_case: "multivariate_multi_horizon_forecasting"
+
+    require_verified_time_varying_covariates: true
+
+  deep_learning_training:
+    batch_size: 256
+
+    epochs: 50
+
+    learning_rate: 0.001
+
+    early_stopping:
+      enabled: true
+      patience: 7
+
+    gradient_clipping:
+      enabled: true
+      max_norm: 1.0
+
+    checkpointing:
+      enabled: true
+
+  note: >
+    Deep learning is intentionally disabled for the initial implementation.
+    First establish whether it improves upon LightGBM and strong baselines.
+    Do not introduce neural networks simply because the raw dataset is large.
+
+
+# -----------------------------------------------------------------------------
+# 14. MULTI-HORIZON FORECASTING
+# -----------------------------------------------------------------------------
+
+multi_horizon:
+  enabled: true
+
+  horizons:
+    - 1
+    - 7
+    - 14
+    - 30
+
+  strategy: "direct"
+
+  separate_model_per_horizon: true
+
+  supported_strategies:
+    recursive:
+      enabled: true
+
+    direct:
+      enabled: true
+
+    multi_output:
+      enabled: true
+
+  evaluation:
+    report_each_horizon_separately: true
+
+    report_aggregate_performance: true
+
+    prevent_horizon_leakage: true
+
+  output:
+    include_horizon_identifier: true
+
+    include_forecast_timestamp: true
+
+    include_point_forecast: true
+
+    include_prediction_interval: false
+
+
+# -----------------------------------------------------------------------------
+# 15. FORECAST UNCERTAINTY
+# -----------------------------------------------------------------------------
+
+uncertainty:
+  enabled: false
+
+  status: "future_implementation"
+
+  objective: "estimate_prediction_uncertainty"
+
+  methods:
+    quantile_regression:
+      enabled: false
+
+      quantiles:
+        - 0.10
+        - 0.50
+        - 0.90
+
+    conformal_prediction:
+      enabled: false
+
+      calibration_required: true
+
+      chronological_calibration: true
+
+  prediction_intervals:
+    enabled: false
+
+    nominal_coverage:
+      - 0.80
+      - 0.90
+      - 0.95
+
+    report_empirical_coverage: true
+
+    report_interval_width: true
+
+  note: >
+    Do not present prediction intervals as statistically reliable until
+    calibration and empirical coverage have been evaluated on held-out
+    chronological data.
+
+
+# -----------------------------------------------------------------------------
+# 16. TRAIN / VALIDATION / TEST STRATEGY
+# -----------------------------------------------------------------------------
+
+validation:
+  strategy: "chronological_panel_validation"
+
+  random_split_allowed: false
+
+  shuffle_before_split: false
+
+  split_unit: "global_timestamp"
+
+  prevent_cross_market_temporal_leakage: true
+
+  prevent_future_observations_in_training: true
+
+  # Initial proportions are development defaults.
+  # Replace with explicit calendar cutoffs when the dataset period is verified.
+  initial_split:
+    train: 0.70
+    validation: 0.15
+    test: 0.15
+
+  split_status: "initial_development_defaults"
+
+  split_method:
+    type: "time_based"
+
+    preserve_series_history: true
+
+    same_global_cutoff_across_panel: true
+
+    allow_series_specific_random_split: false
+
+  rolling_origin:
+    enabled: true
+
+    folds: 3
+
+    expanding_training_window: true
+
+    preserve_forecast_horizon: true
+
+    report_each_fold: true
+
+  final_test:
+    enabled: true
+
+    untouched_until_model_selection: true
+
+    allow_hyperparameter_tuning_on_test: false
+
+    allow_feature_selection_on_test: false
+
+  validation_requirements:
+    - "Train observations must precede validation observations."
+    - "Validation observations must precede test observations."
+    - "Feature calculations must use only information available at each forecast origin."
+    - "All model candidates must use comparable temporal splits."
+    - "The final test set must remain untouched during model tuning."
+
+
+# -----------------------------------------------------------------------------
+# 17. HYPERPARAMETER OPTIMIZATION
+# -----------------------------------------------------------------------------
+
+hyperparameter_tuning:
+  enabled: true
+
+  framework: "optuna"
+
+  optimization_direction: "minimize"
+
+  objective_metric: "wape"
+
+  search_strategy: "bayesian_optimization"
+
+  trials:
+    lightgbm: 50
+    xgboost: 30
+    catboost: 30
+
+  timeout_minutes: 240
+
+  pruning:
+    enabled: true
+
+    strategy: "median_pruner"
+
+  tuning_data:
+    use_training_and_validation_only: true
+
+    test_set_access: false
+
+    use_representative_development_sample: true
+
+  search_spaces:
+    lightgbm:
+      learning_rate:
+        type: "float"
+        low: 0.01
+        high: 0.10
+        log: true
+
+      num_leaves:
+        type: "int"
+        low: 15
+        high: 127
+
+      max_depth:
+        type: "int"
+        low: 4
+        high: 16
+
+      min_child_samples:
+        type: "int"
+        low: 10
+        high: 100
+
+      subsample:
+        type: "float"
+        low: 0.60
+        high: 1.00
+
+      colsample_bytree:
+        type: "float"
+        low: 0.60
+        high: 1.00
+
+      reg_lambda:
+        type: "float"
+        low: 0.001
+        high: 10.0
+        log: true
+
+  reproducibility:
+    fixed_seed: 42
+
+    save_best_parameters: true
+
+    save_all_trial_results: true
+
+
+# -----------------------------------------------------------------------------
+# 18. MODEL EVALUATION METRICS
+# -----------------------------------------------------------------------------
+
+evaluation:
+  enabled: true
+
+  primary_metric: "wape"
+
+  secondary_metrics:
+    - "mae"
+    - "rmse"
+    - "smape"
+    - "mase"
+    - "mean_bias"
+
+  metric_definitions:
+    mae:
+      enabled: true
+      description: "Mean absolute error."
+
+    rmse:
+      enabled: true
+      description: "Root mean squared error."
+
+    wape:
+      enabled: true
+      description: >
+        Weighted absolute percentage error. Guard against a zero total
+        absolute actual value.
+
+    smape:
+      enabled: true
+      description: >
+        Symmetric mean absolute percentage error. Define safe behavior
+        when both actual and predicted values are zero.
+
+    mase:
+      enabled: true
+      description: >
+        Mean absolute scaled error relative to a naive reference forecast.
+        Handle series without a valid scaling denominator.
+
+    mean_bias:
+      enabled: true
+      description: >
+        Signed average prediction error. Clearly document whether positive
+        values represent overprediction or underprediction.
+
+  excluded_metrics:
+    - "mape"
+
+  excluded_metric_reason: >
+    MAPE can be unstable or undefined when actual prices are zero or close
+    to zero. It should not be the primary evaluation metric.
+
+  aggregation:
+    report_micro_average: true
+
+    report_macro_average: true
+
+    report_per_series: true
+
+    report_per_horizon: true
+
+    report_per_commodity: true
+
+    report_per_state: true
+
+    report_per_market: true
+
+  comparison:
+    compare_with_naive: true
+
+    compare_with_seasonal_naive: true
+
+    compare_with_previous_champion: true
+
+
+# -----------------------------------------------------------------------------
+# 19. MODEL PERFORMANCE ACCEPTANCE
+# -----------------------------------------------------------------------------
+
+acceptance:
+  enabled: true
+
+  require_successful_training: true
+
+  require_baseline_comparison: true
+
+  require_holdout_evaluation: true
+
+  require_per_horizon_metrics: true
+
+  require_segment_level_metrics: true
+
+  require_reproducible_run_metadata: true
+
+  require_model_artifact: true
+
+  minimum_improvement_over_baseline:
+    enabled: false
+
+    value: null
+
+    unit: "percentage"
+
+    status: "threshold_requires_business_calibration"
+
+  performance_checks:
+    reject_nan_metrics: true
+
+    reject_infinite_metrics: true
+
+    check_prediction_scale: true
+
+    check_prediction_range: true
+
+    check_prediction_volume: true
+
+    check_segment_regressions: true
+
+  promotion:
+    automatic: false
+
+    require_manual_approval: true
+
+    require_model_card: true
+
+    require_evaluation_report: true
+
+
+# -----------------------------------------------------------------------------
+# 20. MODEL EXPLAINABILITY
+# -----------------------------------------------------------------------------
+
+explainability:
+  enabled: true
+
+  global_explanation:
+    feature_importance:
+      enabled: true
+      methods:
+        - "gain"
+        - "split"
+
+    permutation_importance:
+      enabled: true
+
+  local_explanation:
+    enabled: false
+
+    method: "shap"
+
+    status: "optional_future_implementation"
+
+  outputs:
+    feature_importance_csv: true
+
+    feature_importance_plot: true
+
+    explanation_report: true
+
+  safeguards:
+    compute_on_validation_sample: true
+
+    document_feature_correlations: true
+
+    do_not_interpret_importance_as_causality: true
+
+
+# -----------------------------------------------------------------------------
+# 21. TRAINING CONFIGURATION
+# -----------------------------------------------------------------------------
+
+training:
+  enabled: true
+
+  random_seed: 42
+
+  deterministic_execution:
+    enabled: true
+
+    note: >
+      Exact determinism can depend on library version, hardware, thread count
+      and device-specific implementation.
+
+  execution:
+    mode: "batch"
+
+    supported_modes:
+      - "local"
+      - "batch"
+      - "distributed"
+
+    default: "local"
+
+  parallelism:
+    enabled: true
+
+    worker_count: null
+
+    auto_detect_cpu: true
+
+    max_concurrent_model_training: 2
+
+  hardware:
+    device: "cpu"
+
+    supported:
+      - "cpu"
+      - "cuda"
+
+    gpu_enabled: false
+
+    gpu_status: "enable_only_after_environment_and_memory_validation"
+
+  checkpointing:
+    enabled: true
+
+    save_best_model: true
+
+    save_last_checkpoint: true
+
+    checkpoint_frequency: "best_validation_result"
+
+  logging:
+    enabled: true
+
+    level: "INFO"
+
+    log_training_parameters: true
+
+    log_dataset_summary: true
+
+    log_feature_schema: true
+
+    log_metrics: true
+
+    log_runtime: true
+
+
+# -----------------------------------------------------------------------------
+# 22. LARGE-SCALE DATA PROCESSING
+# -----------------------------------------------------------------------------
+
+scalability:
+  design_target: "approximately_76_million_source_records"
+
+  target_status: "publisher_or_user_reported_volume_pending_local_verification"
+
+  principles:
+    - "Do not load the entire raw dataset into Pandas."
+    - "Use columnar Parquet storage for intermediate datasets."
+    - "Push filtering and aggregation close to the storage engine."
+    - "Generate features independently within each time series."
+    - "Avoid unnecessary duplication of large intermediate datasets."
+    - "Benchmark representative data before full-scale execution."
+
+  processing:
+    primary_engine: "duckdb"
+
+    dataframe_engine: "polars"
+
+    columnar_engine: "pyarrow"
+
+    use_lazy_execution: true
+
+    use_column_projection: true
+
+    use_predicate_pushdown: true
+
+    process_in_partitions: true
+
+  partitions:
+    enabled: true
+
+    candidate_columns:
+      - "State"
+      - "Commodity"
+
+    partition_strategy: "balanced_by_data_volume"
+
+    avoid_excessive_small_files: true
+
+  memory:
+    max_memory: null
+
+    max_memory_status: "configure_based_on_available_hardware"
+
+    spill_to_disk: true
+
+    temporary_storage_required: true
+
+  training_scale:
+    development:
+      use_representative_sample: true
+      purpose: "debugging_and_feature_validation"
+
+    production:
+      use_all_eligible_records: true
+      require_successful_full_scale_benchmark: true
+
+  distributed_training:
+    enabled: false
+
+    activate_only_when:
+      - "Single-machine memory is insufficient."
+      - "Training runtime exceeds acceptable limits."
+      - "Partitioned processing has been benchmarked."
+
+
+# -----------------------------------------------------------------------------
+# 23. MODEL ARTIFACT MANAGEMENT
+# -----------------------------------------------------------------------------
+
+artifacts:
+  enabled: true
+
+  root_directory: "artifacts/models"
+
+  directory_structure:
+    trained_models: "artifacts/models/trained"
+    checkpoints: "artifacts/models/checkpoints"
+    preprocessors: "artifacts/models/preprocessors"
+    feature_schemas: "artifacts/models/feature_schemas"
+    evaluation: "artifacts/models/evaluation"
+    model_metadata: "artifacts/models/metadata"
+    model_cards: "artifacts/models/model_cards"
+
+  serialization:
+    lightgbm: "native_or_joblib"
+    xgboost: "native_or_joblib"
+    catboost: "native"
+    statsmodels: "native_or_joblib"
+    preprocessing: "joblib"
+
+  save:
+    model: true
+    parameters: true
+    metrics: true
+    training_metadata: true
+    feature_names: true
+    feature_schema: true
+    data_version: true
+    configuration_snapshot: true
+    random_seed: true
+
+  naming:
+    convention: "{model_name}_{target}_{horizon}_{run_id}"
+
+    include_timestamp: true
+
+    include_model_version: true
+
+  integrity:
+    generate_checksum: true
+
+    save_file_size: true
+
+    verify_artifact_after_save: true
+
+
+# -----------------------------------------------------------------------------
+# 24. MODEL EXPERIMENT TRACKING
+# -----------------------------------------------------------------------------
+
+experiment_tracking:
+  enabled: true
+
+  framework: "mlflow"
+
+  tracking_uri:
+    value: "mlruns"
+    status: "local_development_default"
+
+  experiment_name: "mandilens_price_forecasting"
+
+  record:
+    - "model_name"
+    - "model_version"
+    - "hyperparameters"
+    - "dataset_version"
+    - "feature_schema"
+    - "training_period"
+    - "validation_period"
+    - "test_period"
+    - "metrics"
+    - "runtime"
+    - "artifact_locations"
+    - "configuration_snapshot"
+
+  model_registry:
+    enabled: false
+
+    status: "future_production_integration"
+
+    require_approval_for_registration: true
+
+
+# -----------------------------------------------------------------------------
+# 25. FORECAST OUTPUT SCHEMA
+# -----------------------------------------------------------------------------
+
+prediction:
+  enabled: true
+
+  output_format: "parquet"
+
+  output_directory: "artifacts/forecasts"
+
+  required_output_columns:
+    - "State"
+    - "District"
+    - "Market"
+    - "Commodity"
+    - "forecast_origin"
+    - "forecast_timestamp"
+    - "forecast_horizon"
+    - "actual_price"
+    - "predicted_price"
+    - "model_name"
+    - "model_version"
+    - "prediction_timestamp"
+
+  optional_output_columns:
+    - "Variety"
+    - "Grade"
+    - "lower_prediction_bound"
+    - "upper_prediction_bound"
+
+  output_rules:
+    preserve_original_target_unit: true
+
+    preserve_series_identity: true
+
+    preserve_forecast_origin: true
+
+    include_model_version: true
+
+    include_forecast_horizon: true
+
+    include_prediction_timestamp: true
+
+    allow_negative_price_predictions: false
+
+    prediction_postprocessing:
+      enabled: false
+
+      method: "none"
+
+      note: >
+        Any clipping or other correction must be documented and evaluated.
+        Do not silently modify model forecasts.
+
+
+# -----------------------------------------------------------------------------
+# 26. INFERENCE CONFIGURATION
+# -----------------------------------------------------------------------------
+
+inference:
+  enabled: true
+
+  mode: "batch"
+
+  supported_modes:
+    - "batch"
+    - "single_series"
+    - "api"
+
+  batch:
+    enabled: true
+
+    maximum_batch_size: null
+
+    chunked_prediction: true
+
+  single_series:
+    enabled: true
+
+    require_series_history: true
+
+    use_baseline_fallback: true
+
+  fallback:
+    enabled: true
+
+    primary_fallback: "naive"
+
+    secondary_fallback: "moving_average"
+
+    activate_when:
+      - "Insufficient historical observations"
+      - "Model artifact unavailable"
+      - "Required features unavailable"
+      - "Prediction fails validation"
+
+  validation:
+    validate_input_schema: true
+
+    validate_feature_order: true
+
+    validate_model_version: true
+
+    validate_prediction_type: true
+
+    reject_nan_prediction: true
+
+    reject_infinite_prediction: true
+
+
+# -----------------------------------------------------------------------------
+# 27. MODEL MONITORING
+# -----------------------------------------------------------------------------
+
+monitoring:
+  enabled: false
+
+  status: "future_production_implementation"
+
+  performance_monitoring:
+    enabled: false
+
+    metrics:
+      - "mae"
+      - "rmse"
+      - "wape"
+      - "mean_bias"
+
+    compare_with_training_baseline: true
+
+  data_drift:
+    enabled: false
+
+    methods:
+      - "population_stability_index"
+      - "distribution_comparison"
+
+  prediction_drift:
+    enabled: false
+
+    monitor:
+      - "prediction_mean"
+      - "prediction_std"
+      - "prediction_range"
+
+  feature_drift:
+    enabled: false
+
+  alerting:
+    enabled: false
+
+    conditions:
+      - "forecast_error_increase"
+      - "feature_distribution_shift"
+      - "prediction_distribution_shift"
+
+  retraining:
+    enabled: false
+
+    trigger: "manual_review"
+
+    automatic_retraining: false
+
+    require_new_validation_cycle: true
+
+
+# -----------------------------------------------------------------------------
+# 28. MODEL VERSIONING AND REPRODUCIBILITY
+# -----------------------------------------------------------------------------
+
+versioning:
+  enabled: true
+
+  model_version_format: "semantic_versioning"
+
+  data_versioning:
+    enabled: true
+
+    record_source_file_hashes: true
+
+    record_dataset_snapshot: true
+
+    record_data_processing_version: true
+
+  code_versioning:
+    enabled: true
+
+    record_git_commit: true
+
+    record_branch: true
+
+    record_working_tree_status: true
+
+  configuration_versioning:
+    enabled: true
+
+    save_configuration_snapshot: true
+
+  environment_versioning:
+    enabled: true
+
+    record_python_version: true
+
+    record_library_versions: true
+
+    record_platform: true
+
+
+# -----------------------------------------------------------------------------
+# 29. VISUALIZATION AND EVALUATION REPORTS
+# -----------------------------------------------------------------------------
+
+reporting:
+  enabled: true
+
+  root_directory: "reports/modeling"
+
+  formats:
+    csv: true
+    json: true
+    html: true
+
+  visualizations:
+    enabled: true
+
+    output_directory: "reports/modeling/figures"
+
+    save_figures: true
+
+    formats:
+      - "png"
+      - "html"
+
+    plots:
+      actual_vs_predicted: true
+      residual_distribution: true
+      residual_over_time: true
+      forecast_horizon_comparison: true
+      model_comparison: true
+      feature_importance: true
+      error_by_commodity: true
+      error_by_state: true
+      error_by_market: true
+      rolling_error: true
+
+  reports:
+    training_summary: true
+
+    evaluation_report: true
+
+    model_comparison_report: true
+
+    feature_importance_report: true
+
+    model_card: true
+
+    failure_summary: true
+
+
+# -----------------------------------------------------------------------------
+# 30. RESOURCE AND EXECUTION SAFEGUARDS
+# -----------------------------------------------------------------------------
+
+execution:
+  fail_fast: true
+
+  continue_on_optional_model_failure: true
+
+  save_partial_results: true
+
+  retry:
+    enabled: true
+
+    maximum_attempts: 2
+
+  timeouts:
+    data_preparation_minutes: null
+
+    model_training_minutes: null
+
+    inference_minutes: null
+
+  resource_checks:
+    enabled: true
+
+    check_disk_space: true
+
+    check_memory_availability: true
+
+    check_input_file_access: true
+
+    check_output_directory_access: true
+
+  cleanup:
+    enabled: true
+
+    remove_temporary_files_after_success: true
+
+    preserve_failed_run_logs: true
+
+    preserve_model_checkpoints: true
+
+
+# -----------------------------------------------------------------------------
+# 31. SECURITY AND DATA GOVERNANCE
+# -----------------------------------------------------------------------------
+
+security:
+  enabled: true
+
+  protect_raw_source_data: true
+
+  do_not_overwrite_source_files: true
+
+  restrict_artifact_write_locations: true
+
+  avoid_sensitive_data_in_logs: true
+
+  validate_serialized_artifacts: true
+
+  external_model_downloads:
+    allowed: false
+
+    require_manual_approval: true
+
+
+# -----------------------------------------------------------------------------
+# 32. IMPLEMENTATION STATUS
+# -----------------------------------------------------------------------------
+
+implementation_status:
+
+  configuration_created: true
+
+  configuration_execution_verified: false
+
+  actual_dataset_schema_verified: false
+
+  target_unit_verified: false
+
+  observation_frequency_verified: false
+
+  panel_series_grain_verified: false
+
+  feature_pipeline_implemented: false
+
+  baseline_models_implemented: false
+
+  statistical_models_implemented: false
+
+  machine_learning_models_implemented: false
+
+  deep_learning_models_implemented: false
+
+  temporal_validation_implemented: false
+
+  hyperparameter_tuning_implemented: false
+
+  evaluation_pipeline_implemented: false
+
+  artifact_management_implemented: false
+
+  experiment_tracking_implemented: false
+
+  inference_pipeline_implemented: false
+
+  monitoring_implemented: false
+
+  production_approval: false
+
+  next_development_priorities:
+    - "Verify the actual dataset schema."
+    - "Verify the target price unit."
+    - "Establish the correct market-series grain."
+    - "Implement baseline forecasting."
+    - "Implement leakage-safe temporal validation."
+    - "Build the feature engineering pipeline."
+    - "Benchmark LightGBM against baseline models."
+    - "Implement model evaluation and artifact tracking."

@@ -1,0 +1,2968 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# Agricultural Market Analytics, Price Forecasting & Decision-Support Platform
+#
+# File: config/dashboard_config.yaml
+# Version: 1.0.0
+#
+# Purpose:
+#   Central configuration for the MandiLens India analytics dashboard.
+#
+# Dashboard responsibilities:
+#   1. Agricultural market intelligence and overview.
+#   2. Commodity price exploration.
+#   3. State, district and market comparisons.
+#   4. Historical price trend analysis.
+#   5. Multi-horizon agricultural price forecasts.
+#   6. Market and commodity performance analysis.
+#   7. Data-quality monitoring.
+#   8. Machine-learning model performance monitoring.
+#   9. Downloadable analytical reports.
+#
+# Recommended technology:
+#   Application: Streamlit
+#   Visualization: Plotly
+#   Analytical query engine: DuckDB
+#   Data processing: Polars
+#   Columnar storage: Parquet
+#   Numerical operations: NumPy
+#
+# IMPORTANT:
+#   Column names and dataset locations are candidate values.
+#   Verify the actual downloaded dataset before enabling data-dependent pages.
+#   Never load the entire raw dataset into Streamlit or Pandas memory.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURATION METADATA
+# -----------------------------------------------------------------------------
+
+metadata:
+  project_name: "MandiLens India"
+
+  configuration_name: "dashboard_config"
+
+  configuration_version: "1.0.0"
+
+  environment: "development"
+
+  description: >
+    Central dashboard configuration for agricultural market analytics,
+    historical commodity price exploration, price forecasting,
+    data-quality monitoring and machine-learning insights.
+
+  maintained_by: "MandiLens India Engineering Team"
+
+  created_date: "2026-11-09"
+
+  last_updated: "2026-11-09"
+
+  configuration_status: "development"
+
+  production_approved: false
+
+  related_configurations:
+    project: "config/project_config.yaml"
+    data_sources: "config/data_sources.yaml"
+    commodity_categories: "config/commodity_categories.yaml"
+    data_quality: "config/data_quality.yaml"
+    model_config: "config/model_config.yaml"
+
+
+# -----------------------------------------------------------------------------
+# 2. APPLICATION CONFIGURATION
+# -----------------------------------------------------------------------------
+
+application:
+  name: "MandiLens India"
+
+  short_name: "MandiLens"
+
+  tagline: >
+    Intelligent Agricultural Market Analytics,
+    Price Forecasting and Decision Support.
+
+  description: >
+    An agricultural intelligence platform that transforms Indian
+    agricultural market observations into actionable insights through
+    interactive analytics, price trends, market comparisons and
+    machine-learning-powered forecasts.
+
+  framework:
+    name: "streamlit"
+
+    minimum_version: "1.35.0"
+
+    version_policy: "pin_and_test_in_project_dependencies"
+
+  entry_point:
+    file: "app.py"
+
+  execution:
+    mode: "web_application"
+
+    development_command: "streamlit run app.py"
+
+    headless: true
+
+    browser_auto_open: true
+
+    watch_files: true
+
+    development_hot_reload: true
+
+  default_page:
+    name: "Overview"
+
+    route: "overview"
+
+  browser:
+    page_title: "MandiLens India | Agricultural Intelligence"
+
+    page_icon: "🌾"
+
+    layout: "wide"
+
+    initial_sidebar_state: "expanded"
+
+    show_toolbar: true
+
+    enable_development_menu: true
+
+  session:
+    persistent_filters: true
+
+    preserve_selected_page: true
+
+    reset_filters_on_reload: false
+
+    session_state_prefix: "mandilens_"
+
+
+# -----------------------------------------------------------------------------
+# 3. BRANDING AND VISUAL IDENTITY
+# -----------------------------------------------------------------------------
+
+branding:
+  product_name: "MandiLens India"
+
+  logo:
+    enabled: true
+
+    primary: "assets/images/logo.png"
+
+    fallback_emoji: "🌾"
+
+    show_in_sidebar: true
+
+    show_in_header: true
+
+  favicon:
+    enabled: true
+
+    path: "assets/images/favicon.png"
+
+  theme:
+    mode: "light"
+
+    primary_color: "#2E7D32"
+
+    background_color: "#F7F9F6"
+
+    secondary_background_color: "#FFFFFF"
+
+    text_color: "#263238"
+
+    border_color: "#E0E6E1"
+
+    accent_colors:
+      agriculture_green: "#2E7D32"
+      forest_green: "#1B5E20"
+      harvest_gold: "#E6A23C"
+      sky_blue: "#4B91C8"
+      neutral_grey: "#78909C"
+      warning_orange: "#F39C12"
+      error_red: "#D9534F"
+
+  typography:
+    font_family: "sans-serif"
+
+    heading_font_size: "large"
+
+    body_font_size: "medium"
+
+    use_consistent_font_scale: true
+
+  design:
+    style: "professional_analytics_dashboard"
+
+    card_style: "clean_minimal"
+
+    rounded_corners: true
+
+    consistent_spacing: true
+
+    consistent_chart_margins: true
+
+    use_subtle_shadows: true
+
+    avoid_visual_clutter: true
+
+    responsive_layout: true
+
+  visual_principles:
+    - "Prioritize readability over decoration."
+    - "Use consistent colors for recurring metrics."
+    - "Avoid misleading chart scales."
+    - "Display units on every relevant price chart."
+    - "Clearly distinguish actual prices from forecasts."
+    - "Use color and labels together to communicate status."
+    - "Keep each page focused on a specific analytical task."
+
+
+# -----------------------------------------------------------------------------
+# 4. APPLICATION NAVIGATION
+# -----------------------------------------------------------------------------
+
+navigation:
+  enabled: true
+
+  position: "sidebar"
+
+  mode: "multipage"
+
+  show_page_icons: true
+
+  show_descriptions: true
+
+  show_active_page_indicator: true
+
+  groups:
+
+    primary:
+      label: "Market Intelligence"
+
+      pages:
+        - "overview"
+        - "market_explorer"
+        - "commodity_explorer"
+
+    analytics:
+      label: "Analytics"
+
+      pages:
+        - "price_trends"
+        - "market_comparison"
+        - "seasonality"
+
+    forecasting:
+      label: "Forecasting"
+
+      pages:
+        - "price_forecasts"
+        - "forecast_comparison"
+
+    monitoring:
+      label: "Monitoring"
+
+      pages:
+        - "data_quality"
+        - "model_performance"
+
+    information:
+      label: "Platform"
+
+      pages:
+        - "about"
+        - "data_documentation"
+
+  default_page: "overview"
+
+  page_visibility:
+    overview: true
+    market_explorer: true
+    commodity_explorer: true
+    price_trends: true
+    market_comparison: true
+    seasonality: true
+
+    price_forecasts:
+      enabled: true
+      require_model_artifact: true
+
+    forecast_comparison:
+      enabled: true
+      require_evaluation_data: true
+
+    data_quality:
+      enabled: true
+      require_quality_reports: true
+
+    model_performance:
+      enabled: true
+      require_model_evaluation: true
+
+    about: true
+    data_documentation: true
+
+
+# -----------------------------------------------------------------------------
+# 5. GLOBAL DATA CONFIGURATION
+# -----------------------------------------------------------------------------
+
+data:
+  source:
+    primary_engine: "duckdb"
+
+    processing_engine: "polars"
+
+    storage_format: "parquet"
+
+    use_lazy_execution: true
+
+    read_raw_files_directly_in_dashboard: false
+
+  paths:
+    # Adjust these paths to match the final project directory.
+    processed_data: "data/processed"
+
+    aggregated_data: "data/analytics"
+
+    reference_data: "data/reference"
+
+    forecast_data: "artifacts/forecasts"
+
+    quality_reports: "reports/data_quality"
+
+    model_evaluation: "artifacts/models/evaluation"
+
+  dataset:
+    logical_name: "validated_agricultural_market_prices"
+
+    expected_scale:
+      record_count: 75962937
+
+      record_count_status: "publisher_or_user_reported_pending_local_verification"
+
+    load_strategy: "query_on_demand"
+
+    full_dataset_in_memory: false
+
+    use_aggregated_tables: true
+
+  candidate_schema:
+    geography:
+      state: "State"
+      district: "District"
+      market: "Market"
+
+    commodity:
+      commodity: "Commodity"
+      variety: "Variety"
+      grade: "Grade"
+      commodity_code: "Commodity_Code"
+
+    temporal:
+      arrival_date: "Arrival_Date"
+
+    price:
+      minimum_price: "Min_Price"
+      maximum_price: "Max_Price"
+      modal_price: "Modal_Price"
+
+    schema_status: "pending_local_dataset_verification"
+
+  price:
+    target_column: "Modal_Price"
+
+    currency: "INR"
+
+    unit: null
+
+    unit_status: "pending_source_documentation"
+
+    display_unit: "pending_source_documentation"
+
+    decimal_places: 2
+
+    thousands_separator: true
+
+    negative_values_allowed: false
+
+  geographic:
+    country: "India"
+
+    default_country: "India"
+
+    map_coordinate_columns:
+      latitude: "latitude"
+      longitude: "longitude"
+
+    coordinates_available: false
+
+    coordinate_status: "reference_data_required"
+
+
+# -----------------------------------------------------------------------------
+# 6. DATA ACCESS AND QUERY STRATEGY
+# -----------------------------------------------------------------------------
+
+query_engine:
+  enabled: true
+
+  engine: "duckdb"
+
+  connection:
+    mode: "read_only"
+
+    create_if_missing: true
+
+    persistent_database:
+      enabled: true
+
+      path: "data/analytics/mandilens.duckdb"
+
+  execution:
+    use_parameterized_queries: true
+
+    prevent_sql_string_concatenation_for_user_filters: true
+
+    use_column_projection: true
+
+    use_filter_pushdown: true
+
+    use_partition_pruning: true
+
+    use_aggregated_tables: true
+
+    avoid_unnecessary_full_table_scans: true
+
+  query_types:
+    overview:
+      use_precomputed_aggregates: true
+
+    commodity:
+      filter_before_aggregation: true
+
+    market:
+      filter_before_aggregation: true
+
+    forecasts:
+      read_model_forecast_artifacts: true
+
+    data_quality:
+      read_quality_reports: true
+
+    model_performance:
+      read_evaluation_artifacts: true
+
+  query_safety:
+    enforce_query_timeout: true
+
+    timeout_seconds: 120
+
+    maximum_result_rows: 100000
+
+    reject_unbounded_detail_queries: true
+
+    log_slow_queries: true
+
+  error_policy:
+    missing_table: "show_actionable_error"
+
+    missing_column: "show_schema_mismatch_error"
+
+    query_timeout: "show_retry_message"
+
+    corrupted_data: "show_data_integrity_warning"
+
+
+# -----------------------------------------------------------------------------
+# 7. ANALYTICAL DATA MARTS
+# -----------------------------------------------------------------------------
+
+data_marts:
+  enabled: true
+
+  purpose: >
+    Provide dashboard-ready analytical datasets so that interactive pages
+    do not repeatedly scan and aggregate the complete raw dataset.
+
+  storage_format: "parquet"
+
+  recommended_structure:
+
+    market_prices:
+      logical_name: "market_prices"
+
+      description: >
+        Validated market-level commodity price observations.
+
+      grain:
+        - "State"
+        - "District"
+        - "Market"
+        - "Commodity"
+        - "Arrival_Date"
+
+      source: "validated_agricultural_market_prices"
+
+    daily_market_summary:
+      logical_name: "daily_market_summary"
+
+      description: "Aggregated daily market price statistics."
+
+      candidate_metrics:
+        - "observation_count"
+        - "average_modal_price"
+        - "median_modal_price"
+        - "minimum_price"
+        - "maximum_price"
+
+      group_by:
+        - "Arrival_Date"
+        - "State"
+        - "Commodity"
+
+    commodity_summary:
+      logical_name: "commodity_summary"
+
+      description: "Commodity-level analytical summary."
+
+      group_by:
+        - "Commodity"
+
+      candidate_metrics:
+        - "observation_count"
+        - "market_count"
+        - "average_modal_price"
+        - "median_modal_price"
+
+    market_summary:
+      logical_name: "market_summary"
+
+      description: "Market-level analytical summary."
+
+      group_by:
+        - "State"
+        - "District"
+        - "Market"
+
+      candidate_metrics:
+        - "observation_count"
+        - "commodity_count"
+        - "average_modal_price"
+
+    state_summary:
+      logical_name: "state_summary"
+
+      description: "State-level agricultural market summary."
+
+      group_by:
+        - "State"
+
+      candidate_metrics:
+        - "market_count"
+        - "commodity_count"
+        - "observation_count"
+
+  creation:
+    enabled: true
+
+    pipeline_location: "src/analytics/data_mart_builder.py"
+
+    refresh_mode: "scheduled_or_manual"
+
+    full_rebuild_required_for_schema_change: true
+
+    incremental_refresh: true
+
+    validate_before_publish: true
+
+  publication:
+    only_publish_validated_data: true
+
+    retain_previous_successful_snapshot: true
+
+    record_data_version: true
+
+
+# -----------------------------------------------------------------------------
+# 8. GLOBAL FILTER CONFIGURATION
+# -----------------------------------------------------------------------------
+
+filters:
+  enabled: true
+
+  location: "sidebar"
+
+  layout: "vertical"
+
+  display_mode: "expandable"
+
+  show_active_filter_summary: true
+
+  allow_multiple_selections: true
+
+  allow_clear_all: true
+
+  preserve_filters_across_pages: true
+
+  filters:
+
+    state:
+      enabled: true
+
+      label: "State"
+
+      column: "State"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      required: false
+
+    district:
+      enabled: true
+
+      label: "District"
+
+      column: "District"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      dependent_on:
+        - "state"
+
+      required: false
+
+    market:
+      enabled: true
+
+      label: "Market"
+
+      column: "Market"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      dependent_on:
+        - "state"
+        - "district"
+
+      required: false
+
+    commodity:
+      enabled: true
+
+      label: "Commodity"
+
+      column: "Commodity"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      required: false
+
+    variety:
+      enabled: true
+
+      label: "Variety"
+
+      column: "Variety"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      dependent_on:
+        - "commodity"
+
+      required: false
+
+    grade:
+      enabled: true
+
+      label: "Grade"
+
+      column: "Grade"
+
+      type: "multiselect"
+
+      default: "all"
+
+      searchable: true
+
+      dependent_on:
+        - "commodity"
+
+      required: false
+
+    arrival_date:
+      enabled: true
+
+      label: "Arrival Date"
+
+      column: "Arrival_Date"
+
+      type: "date_range"
+
+      default: "available_dataset_range"
+
+      minimum_date: null
+
+      maximum_date: "latest_available_date"
+
+      required: false
+
+  interaction:
+    apply_button: true
+
+    reset_button: true
+
+    update_on_every_change: false
+
+    update_on_apply: true
+
+  dependency_rules:
+    enabled: true
+
+    recompute_child_options: true
+
+    reset_invalid_child_values: true
+
+    prevent_unfiltered_high_cardinality_options: true
+
+  filtering:
+    use_parameterized_queries: true
+
+    apply_filters_before_aggregation: true
+
+    preserve_filter_context_in_exports: true
+
+
+# -----------------------------------------------------------------------------
+# 9. DATE FILTER AND TIME CONTROLS
+# -----------------------------------------------------------------------------
+
+date_controls:
+  enabled: true
+
+  default_selection: "available_dataset_range"
+
+  supported_presets:
+    - "last_7_days"
+    - "last_30_days"
+    - "last_90_days"
+    - "last_6_months"
+    - "last_12_months"
+    - "year_to_date"
+    - "all_available_dates"
+    - "custom_range"
+
+  default_preset: "last_12_months"
+
+  date_column: "Arrival_Date"
+
+  date_timezone: "Asia/Kolkata"
+
+  comparison:
+    enabled: true
+
+    options:
+      - "previous_period"
+      - "previous_year"
+
+    require_equal_period_length: true
+
+  missing_dates:
+    display_missing_observation_gaps: true
+
+    assume_zero_price: false
+
+    forward_fill_for_visualization: false
+
+    distinguish_no_observation_from_zero_price: true
+
+  chart_resolution:
+    automatic: true
+
+    options:
+      - "daily"
+      - "weekly"
+      - "monthly"
+
+    maximum_daily_points: 5000
+
+    use_downsampling_for_long_ranges: true
+
+
+# -----------------------------------------------------------------------------
+# 10. DASHBOARD-WIDE KPI CONFIGURATION
+# -----------------------------------------------------------------------------
+
+kpis:
+  enabled: true
+
+  layout:
+    desktop_columns: 4
+
+    tablet_columns: 2
+
+    mobile_columns: 1
+
+    card_style: "minimal"
+
+    show_tooltips: true
+
+    show_context_labels: true
+
+  formatting:
+    decimal_places: 2
+
+    compact_large_numbers: true
+
+    thousands_separator: true
+
+    null_display: "N/A"
+
+  metrics:
+
+    total_observations:
+      enabled: true
+
+      label: "Total Observations"
+
+      aggregation: "count"
+
+      source: "market_prices"
+
+      format: "integer"
+
+      description: "Number of eligible market price observations."
+
+    total_states:
+      enabled: true
+
+      label: "States Covered"
+
+      source: "market_prices"
+
+      aggregation: "distinct_count"
+
+      column: "State"
+
+      format: "integer"
+
+    total_markets:
+      enabled: true
+
+      label: "Markets Covered"
+
+      source: "market_prices"
+
+      aggregation: "distinct_count"
+
+      column: "Market"
+
+      format: "integer"
+
+    total_commodities:
+      enabled: true
+
+      label: "Commodities Tracked"
+
+      source: "market_prices"
+
+      aggregation: "distinct_count"
+
+      column: "Commodity"
+
+      format: "integer"
+
+    latest_arrival_date:
+      enabled: true
+
+      label: "Latest Arrival Date"
+
+      source: "market_prices"
+
+      aggregation: "max"
+
+      column: "Arrival_Date"
+
+      format: "date"
+
+    average_modal_price:
+      enabled: true
+
+      label: "Average Modal Price"
+
+      source: "market_prices"
+
+      aggregation: "mean"
+
+      column: "Modal_Price"
+
+      format: "price"
+
+      unit: "inherit_from_data_configuration"
+
+    median_modal_price:
+      enabled: true
+
+      label: "Median Modal Price"
+
+      source: "market_prices"
+
+      aggregation: "median"
+
+      column: "Modal_Price"
+
+      format: "price"
+
+    active_markets:
+      enabled: true
+
+      label: "Markets Reporting"
+
+      description: >
+        Markets with valid observations inside the selected date period.
+
+      calculation: "distinct_market_count_with_observations"
+
+    percentage_change:
+      enabled: true
+
+      label: "Price Change"
+
+      calculation: "period_over_period_percentage_change"
+
+      comparison_required: true
+
+      zero_denominator_policy: "return_na"
+
+  validation:
+    exclude_invalid_prices: true
+
+    respect_global_filters: true
+
+    record_aggregation_timestamp: true
+
+    prevent_inconsistent_denominators: true
+
+
+# -----------------------------------------------------------------------------
+# 11. OVERVIEW PAGE
+# -----------------------------------------------------------------------------
+
+pages:
+
+  overview:
+    enabled: true
+
+    route: "overview"
+
+    title: "Agricultural Market Overview"
+
+    icon: "🌾"
+
+    description: >
+      A high-level view of India's agricultural market activity,
+      commodity prices and reporting coverage.
+
+    layout:
+      width: "wide"
+
+      sections:
+        - "page_header"
+        - "global_filters"
+        - "overview_kpis"
+        - "market_activity"
+        - "price_movement"
+        - "commodity_highlights"
+        - "geographical_distribution"
+        - "recent_market_records"
+
+    components:
+
+      header:
+        enabled: true
+
+        show_project_title: true
+
+        show_description: true
+
+        show_last_updated: true
+
+      kpis:
+        enabled: true
+
+        metrics:
+          - "total_observations"
+          - "total_states"
+          - "total_markets"
+          - "total_commodities"
+
+      market_activity_chart:
+        enabled: true
+
+        type: "line"
+
+        title: "Market Reporting Activity"
+
+        x: "Arrival_Date"
+
+        y: "observation_count"
+
+        aggregation: "daily"
+
+      price_movement_chart:
+        enabled: true
+
+        type: "line"
+
+        title: "Average Modal Price Trend"
+
+        x: "Arrival_Date"
+
+        y: "average_modal_price"
+
+        aggregation: "daily"
+
+      commodity_highlights:
+        enabled: true
+
+        type: "bar"
+
+        title: "Top Commodities by Market Coverage"
+
+        ranking_metric: "market_count"
+
+        limit: 10
+
+      geographical_distribution:
+        enabled: true
+
+        type: "bar"
+
+        title: "Market Coverage by State"
+
+        group_by: "State"
+
+        ranking_metric: "market_count"
+
+        limit: 15
+
+      recent_market_records:
+        enabled: true
+
+        title: "Recent Market Observations"
+
+        limit: 20
+
+        sort_order: "descending"
+
+        sort_by: "Arrival_Date"
+
+        require_pagination: true
+
+
+# -----------------------------------------------------------------------------
+# 12. MARKET EXPLORER PAGE
+# -----------------------------------------------------------------------------
+
+  market_explorer:
+    enabled: true
+
+    route: "market-explorer"
+
+    title: "Market Explorer"
+
+    icon: "🏪"
+
+    description: >
+      Explore agricultural markets across states and districts,
+      inspect available commodities and examine local market prices.
+
+    layout:
+      width: "wide"
+
+      sections:
+        - "market_filters"
+        - "market_summary"
+        - "market_price_distribution"
+        - "market_records"
+        - "market_ranking"
+
+    filters:
+      use_global_filters: true
+
+      additional:
+        state: true
+        district: true
+        market: true
+        commodity: true
+        arrival_date: true
+
+    components:
+
+      market_summary:
+        enabled: true
+
+        show_market_count: true
+
+        show_commodity_count: true
+
+        show_average_modal_price: true
+
+        show_latest_arrival_date: true
+
+      price_distribution:
+        enabled: true
+
+        type: "box"
+
+        title: "Market Price Distribution"
+
+        y: "Modal_Price"
+
+        x: "Market"
+
+        maximum_categories: 20
+
+      market_ranking:
+        enabled: true
+
+        title: "Market Price Ranking"
+
+        ranking_metric: "average_modal_price"
+
+        order: "descending"
+
+        limit: 20
+
+      market_records:
+        enabled: true
+
+        enable_search: true
+
+        enable_sorting: true
+
+        enable_pagination: true
+
+        default_page_size: 50
+
+        maximum_page_size: 500
+
+
+# -----------------------------------------------------------------------------
+# 13. COMMODITY EXPLORER PAGE
+# -----------------------------------------------------------------------------
+
+  commodity_explorer:
+    enabled: true
+
+    route: "commodity-explorer"
+
+    title: "Commodity Explorer"
+
+    icon: "🌱"
+
+    description: >
+      Analyze agricultural commodity prices, market availability,
+      price ranges and historical movements.
+
+    layout:
+      width: "wide"
+
+      sections:
+        - "commodity_selection"
+        - "commodity_summary"
+        - "commodity_price_history"
+        - "commodity_market_ranking"
+        - "commodity_price_distribution"
+        - "commodity_records"
+
+    filters:
+      use_global_filters: true
+
+      commodity_required: true
+
+      allow_multiple_commodities: false
+
+      allow_variety_filter: true
+
+      allow_grade_filter: true
+
+    components:
+
+      summary:
+        enabled: true
+
+        metrics:
+          - "average_modal_price"
+          - "median_modal_price"
+          - "minimum_price"
+          - "maximum_price"
+          - "market_count"
+          - "latest_arrival_date"
+
+      price_history:
+        enabled: true
+
+        type: "line"
+
+        title: "Historical Commodity Price"
+
+        x: "Arrival_Date"
+
+        y: "Modal_Price"
+
+        group_by: "Market"
+
+        maximum_market_series: 10
+
+      price_distribution:
+        enabled: true
+
+        type: "histogram"
+
+        title: "Commodity Price Distribution"
+
+        x: "Modal_Price"
+
+        bins: 40
+
+      market_ranking:
+        enabled: true
+
+        title: "Markets by Average Modal Price"
+
+        ranking_metric: "average_modal_price"
+
+        order: "descending"
+
+        limit: 20
+
+      commodity_records:
+        enabled: true
+
+        pagination: true
+
+        default_page_size: 50
+
+
+# -----------------------------------------------------------------------------
+# 14. PRICE TRENDS PAGE
+# -----------------------------------------------------------------------------
+
+  price_trends:
+    enabled: true
+
+    route: "price-trends"
+
+    title: "Price Trend Analysis"
+
+    icon: "📈"
+
+    description: >
+      Study historical agricultural price movements and identify
+      periods of growth, decline and unusual price behavior.
+
+    components:
+
+      historical_trend:
+        enabled: true
+
+        type: "line"
+
+        title: "Historical Price Trend"
+
+        x: "Arrival_Date"
+
+        y: "Modal_Price"
+
+        aggregation_options:
+          - "daily"
+          - "weekly"
+          - "monthly"
+
+      price_range:
+        enabled: true
+
+        type: "area"
+
+        title: "Minimum, Modal and Maximum Price"
+
+        lower_column: "Min_Price"
+
+        middle_column: "Modal_Price"
+
+        upper_column: "Max_Price"
+
+      percentage_change:
+        enabled: true
+
+        type: "bar"
+
+        title: "Price Change Over Time"
+
+        calculation: "period_over_period_percentage_change"
+
+      rolling_average:
+        enabled: true
+
+        type: "line"
+
+        title: "Rolling Price Average"
+
+        windows:
+          - 7
+          - 14
+          - 30
+
+        calculation_unit: "observations"
+
+      volatility:
+        enabled: true
+
+        type: "line"
+
+        title: "Rolling Price Volatility"
+
+        metric: "rolling_standard_deviation"
+
+        window: 14
+
+      controls:
+        show_trendline: true
+
+        show_rolling_average: true
+
+        allow_time_aggregation: true
+
+        allow_market_comparison: true
+
+
+# -----------------------------------------------------------------------------
+# 15. MARKET COMPARISON PAGE
+# -----------------------------------------------------------------------------
+
+  market_comparison:
+    enabled: true
+
+    route: "market-comparison"
+
+    title: "Market Comparison"
+
+    icon: "⚖️"
+
+    description: >
+      Compare commodity prices across different agricultural markets,
+      districts and states.
+
+    comparison:
+      minimum_entities: 2
+
+      maximum_entities: 10
+
+      entity_type:
+        - "Market"
+        - "District"
+        - "State"
+
+      default_entity_type: "Market"
+
+    components:
+
+      comparison_chart:
+        enabled: true
+
+        type: "line"
+
+        title: "Price Comparison Across Markets"
+
+        x: "Arrival_Date"
+
+        y: "average_modal_price"
+
+        group_by: "comparison_entity"
+
+      comparison_table:
+        enabled: true
+
+        columns:
+          - "comparison_entity"
+          - "average_modal_price"
+          - "median_modal_price"
+          - "minimum_modal_price"
+          - "maximum_modal_price"
+          - "observation_count"
+
+      price_spread:
+        enabled: true
+
+        type: "bar"
+
+        title: "Price Difference Between Selected Markets"
+
+        calculation: "maximum_minus_minimum_average_price"
+
+      comparison_rules:
+        require_same_commodity: true
+
+        use_common_date_window: true
+
+        handle_different_observation_counts: true
+
+        display_sample_counts: true
+
+
+# -----------------------------------------------------------------------------
+# 16. SEASONALITY ANALYSIS PAGE
+# -----------------------------------------------------------------------------
+
+  seasonality:
+    enabled: true
+
+    route: "seasonality"
+
+    title: "Seasonality Analysis"
+
+    icon: "🗓️"
+
+    description: >
+      Analyze recurring price behavior across months, quarters
+      and available historical periods.
+
+    components:
+
+      monthly_pattern:
+        enabled: true
+
+        type: "line"
+
+        title: "Average Price by Month"
+
+        group_by: "month"
+
+        aggregation: "mean"
+
+      monthly_heatmap:
+        enabled: true
+
+        type: "heatmap"
+
+        title: "Commodity Price Seasonality"
+
+        x: "month"
+
+        y: "year"
+
+        value: "average_modal_price"
+
+      yearly_comparison:
+        enabled: true
+
+        type: "line"
+
+        title: "Year-over-Year Price Comparison"
+
+        x: "month"
+
+        y: "average_modal_price"
+
+        group_by: "year"
+
+      statistical_summary:
+        enabled: true
+
+        metrics:
+          - "monthly_mean"
+          - "monthly_median"
+          - "monthly_standard_deviation"
+
+      requirements:
+        minimum_historical_years: 2
+
+        show_observation_coverage: true
+
+        distinguish_missing_periods: true
+
+        do_not_claim_causality: true
+
+
+# -----------------------------------------------------------------------------
+# 17. PRICE FORECASTS PAGE
+# -----------------------------------------------------------------------------
+
+  price_forecasts:
+    enabled: true
+
+    route: "price-forecasts"
+
+    title: "Agricultural Price Forecasts"
+
+    icon: "🔮"
+
+    description: >
+      Explore machine-learning-generated agricultural commodity price
+      forecasts for selected markets and forecasting horizons.
+
+    data_source:
+      directory: "artifacts/forecasts"
+
+      format: "parquet"
+
+      require_forecast_artifact: true
+
+    controls:
+      commodity_selection: true
+
+      market_selection: true
+
+      forecast_horizon_selection: true
+
+      model_selection: true
+
+    default_horizons:
+      - 1
+      - 7
+      - 14
+      - 30
+
+    horizon_unit: "market_observation_steps"
+
+    components:
+
+      forecast_summary:
+        enabled: true
+
+        show_forecast_origin: true
+
+        show_latest_observed_price: true
+
+        show_predicted_price: true
+
+        show_forecast_horizon: true
+
+        show_model_name: true
+
+        show_model_version: true
+
+      forecast_chart:
+        enabled: true
+
+        type: "line"
+
+        title: "Historical Prices and Future Forecast"
+
+        historical_series:
+          enabled: true
+
+          color: "#78909C"
+
+        forecast_series:
+          enabled: true
+
+          color: "#2E7D32"
+
+        show_forecast_boundary: true
+
+        show_forecast_points: true
+
+        show_confidence_interval: false
+
+      forecast_table:
+        enabled: true
+
+        columns:
+          - "State"
+          - "District"
+          - "Market"
+          - "Commodity"
+          - "forecast_origin"
+          - "forecast_timestamp"
+          - "forecast_horizon"
+          - "predicted_price"
+          - "model_name"
+          - "model_version"
+
+      explanation:
+        enabled: true
+
+        display:
+          - "Forecast is an estimate, not a guaranteed market price."
+          - "Forecast quality depends on historical data and market behavior."
+          - "Forecast horizon uses the configured market observation calendar."
+
+      validation:
+        reject_missing_model_artifact: true
+
+        reject_invalid_forecast_records: true
+
+        show_model_version: true
+
+        show_forecast_timestamp: true
+
+        distinguish_forecast_from_actual: true
+
+    unavailable_state:
+      show_explanation: true
+
+      message: >
+        Forecasts are not currently available for this selection.
+        Check model training status, forecast artifact availability
+        and historical data coverage.
+
+
+# -----------------------------------------------------------------------------
+# 18. FORECAST COMPARISON PAGE
+# -----------------------------------------------------------------------------
+
+  forecast_comparison:
+    enabled: true
+
+    route: "forecast-comparison"
+
+    title: "Forecast Model Comparison"
+
+    icon: "🧪"
+
+    description: >
+      Compare the performance of statistical and machine-learning models
+      across commodities, markets and forecasting horizons.
+
+    data_source:
+      directory: "artifacts/models/evaluation"
+
+    components:
+
+      model_ranking:
+        enabled: true
+
+        type: "bar"
+
+        ranking_metric: "wape"
+
+        order: "ascending"
+
+      metric_comparison:
+        enabled: true
+
+        metrics:
+          - "mae"
+          - "rmse"
+          - "wape"
+          - "smape"
+          - "mase"
+          - "mean_bias"
+
+      horizon_comparison:
+        enabled: true
+
+        type: "bar"
+
+        x: "forecast_horizon"
+
+        y: "wape"
+
+        group_by: "model_name"
+
+      actual_vs_predicted:
+        enabled: true
+
+        type: "scatter"
+
+        x: "actual_price"
+
+        y: "predicted_price"
+
+      residual_analysis:
+        enabled: true
+
+        histogram: true
+
+        time_series: true
+
+      segment_analysis:
+        enabled: true
+
+        dimensions:
+          - "Commodity"
+          - "State"
+          - "Market"
+
+    rules:
+      compare_identical_test_periods: true
+
+      compare_identical_eligible_records: true
+
+      show_baseline_models: true
+
+      show_evaluation_sample_counts: true
+
+      do_not_use_test_metrics_for_tuning: true
+
+
+# -----------------------------------------------------------------------------
+# 19. DATA QUALITY PAGE
+# -----------------------------------------------------------------------------
+
+  data_quality:
+    enabled: true
+
+    route: "data-quality"
+
+    title: "Data Quality Monitoring"
+
+    icon: "🛡️"
+
+    description: >
+      Monitor the reliability, completeness, validity and consistency
+      of agricultural market observations.
+
+    data_source:
+      directory: "reports/data_quality"
+
+      configuration: "config/data_quality.yaml"
+
+    components:
+
+      quality_score:
+        enabled: true
+
+        label: "Overall Data Quality Score"
+
+        format: "percentage"
+
+        show_quality_dimensions: true
+
+      quality_dimensions:
+        enabled: true
+
+        metrics:
+          - "completeness"
+          - "validity"
+          - "consistency"
+          - "uniqueness"
+          - "accuracy_proxy"
+          - "timeliness"
+          - "integrity"
+
+      issue_summary:
+        enabled: true
+
+        severity_levels:
+          - "critical"
+          - "high"
+          - "medium"
+          - "low"
+
+      missing_values:
+        enabled: true
+
+        type: "bar"
+
+        show_missing_count: true
+
+        show_missing_percentage: true
+
+      duplicate_analysis:
+        enabled: true
+
+        show_duplicate_candidates: true
+
+        show_resolution_status: true
+
+      anomaly_analysis:
+        enabled: true
+
+        show_suspicious_price_records: true
+
+        require_review_status: true
+
+      validation_history:
+        enabled: true
+
+        show_execution_timestamp: true
+
+        show_dataset_version: true
+
+        show_validation_status: true
+
+    safety:
+      do_not_display_unverified_quality_score: true
+
+      display_configuration_vs_execution_status: true
+
+      do_not_mark_unrun_checks_as_passed: true
+
+
+# -----------------------------------------------------------------------------
+# 20. MODEL PERFORMANCE PAGE
+# -----------------------------------------------------------------------------
+
+  model_performance:
+    enabled: true
+
+    route: "model-performance"
+
+    title: "Model Performance Monitoring"
+
+    icon: "📊"
+
+    description: >
+      Inspect model training runs, validation results, forecasting errors,
+      model versions and production-readiness status.
+
+    data_source:
+      evaluation: "artifacts/models/evaluation"
+
+      metadata: "artifacts/models/metadata"
+
+      model_cards: "artifacts/models/model_cards"
+
+    components:
+
+      model_summary:
+        enabled: true
+
+        show_active_model: true
+
+        show_model_version: true
+
+        show_training_timestamp: true
+
+        show_last_evaluation: true
+
+      evaluation_metrics:
+        enabled: true
+
+        metrics:
+          - "mae"
+          - "rmse"
+          - "wape"
+          - "smape"
+          - "mase"
+          - "mean_bias"
+
+      training_history:
+        enabled: true
+
+        show_training_runs: true
+
+        show_parameters: true
+
+        show_dataset_version: true
+
+      feature_importance:
+        enabled: true
+
+        top_n: 20
+
+      model_status:
+        enabled: true
+
+        statuses:
+          - "development"
+          - "trained"
+          - "evaluated"
+          - "approved"
+          - "production"
+
+      comparison:
+        enabled: true
+
+        show_baseline_comparison: true
+
+        show_previous_champion: true
+
+    safeguards:
+      require_evaluation_artifact: true
+
+      show_actual_training_status: true
+
+      do_not_assume_model_is_production_ready: true
+
+
+# -----------------------------------------------------------------------------
+# 21. ABOUT PAGE
+# -----------------------------------------------------------------------------
+
+  about:
+    enabled: true
+
+    route: "about"
+
+    title: "About MandiLens India"
+
+    icon: "ℹ️"
+
+    content:
+      show_project_overview: true
+
+      show_project_objectives: true
+
+      show_technology_stack: true
+
+      show_data_sources: true
+
+      show_model_information: true
+
+      show_limitations: true
+
+      show_development_status: true
+
+      show_disclaimer: true
+
+    technology_stack:
+      - "Python"
+      - "Streamlit"
+      - "Plotly"
+      - "DuckDB"
+      - "Polars"
+      - "PyArrow"
+      - "Scikit-learn"
+      - "LightGBM"
+      - "XGBoost"
+      - "CatBoost"
+      - "PyTorch"
+
+    disclaimer: >
+      MandiLens India provides analytical information and model-based
+      estimates for research and decision support. Historical market
+      observations and forecasts should be independently evaluated.
+      Forecasts are not guarantees of future prices or financial outcomes.
+
+
+# -----------------------------------------------------------------------------
+# 22. DATA DOCUMENTATION PAGE
+# -----------------------------------------------------------------------------
+
+  data_documentation:
+    enabled: true
+
+    route: "data-documentation"
+
+    title: "Data Documentation"
+
+    icon: "📚"
+
+    content:
+      show_dataset_description: true
+
+      show_source_attribution: true
+
+      show_schema: true
+
+      show_column_definitions: true
+
+      show_data_quality_policy: true
+
+      show_price_unit: true
+
+      show_last_refresh: true
+
+      show_known_limitations: true
+
+    source_information:
+      require_source_name: true
+
+      require_source_url: true
+
+      require_download_timestamp: true
+
+      require_license_information: true
+
+      require_attribution_policy: true
+
+    schema:
+      use_actual_verified_schema: true
+
+      do_not_present_candidate_schema_as_verified: true
+
+
+# -----------------------------------------------------------------------------
+# 23. VISUALIZATION ENGINE
+# -----------------------------------------------------------------------------
+
+visualization:
+  enabled: true
+
+  engine: "plotly"
+
+  interactive: true
+
+  responsive: true
+
+  theme: "plotly_white"
+
+  default_height: 420
+
+  minimum_height: 300
+
+  maximum_height: 900
+
+  display_mode: "container_width"
+
+  export:
+    static_image:
+      enabled: true
+
+      formats:
+        - "png"
+        - "svg"
+
+    interactive_html:
+      enabled: true
+
+  chart_defaults:
+    show_legend: true
+
+    show_grid: true
+
+    show_axis_titles: true
+
+    show_hover_information: true
+
+    show_tooltips: true
+
+    show_data_labels: false
+
+    display_units: true
+
+    avoid_truncated_axis_labels: true
+
+    consistent_axis_formatting: true
+
+  color_mapping:
+    actual_prices: "#78909C"
+
+    predicted_prices: "#2E7D32"
+
+    historical_average: "#4B91C8"
+
+    minimum_price: "#E6A23C"
+
+    maximum_price: "#D9534F"
+
+    positive_change: "#2E7D32"
+
+    negative_change: "#D9534F"
+
+    neutral: "#78909C"
+
+  chart_types:
+    - "line"
+    - "bar"
+    - "horizontal_bar"
+    - "area"
+    - "scatter"
+    - "histogram"
+    - "box"
+    - "heatmap"
+    - "violin"
+    - "candlestick"
+
+  chart_safety:
+    do_not_connect_missing_observations_as_real_prices: true
+
+    display_actual_and_forecast_with_distinct_styles: true
+
+    use_consistent_units: true
+
+    avoid_inappropriate_dual_axes: true
+
+    display_sample_size: true
+
+    document_aggregation_method: true
+
+
+# -----------------------------------------------------------------------------
+# 24. GEOGRAPHICAL VISUALIZATION
+# -----------------------------------------------------------------------------
+
+maps:
+  enabled: true
+
+  status: "requires_verified_geographical_reference_data"
+
+  default_view: "india"
+
+  mapping_engine: "plotly"
+
+  map_types:
+    state_distribution:
+      enabled: true
+
+      metric: "market_count"
+
+    market_distribution:
+      enabled: true
+
+      metric: "average_modal_price"
+
+    commodity_distribution:
+      enabled: true
+
+      metric: "observation_count"
+
+  geographic_data:
+    latitude_column: "latitude"
+
+    longitude_column: "longitude"
+
+    coordinate_source: "data/reference"
+
+    require_verified_coordinates: true
+
+    validate_coordinate_ranges: true
+
+    missing_coordinates:
+      policy: "exclude_from_map"
+
+      show_excluded_count: true
+
+  visual_settings:
+    show_hover_information: true
+
+    show_location_labels: true
+
+    enable_zoom: true
+
+    enable_pan: true
+
+    show_legend: true
+
+  performance:
+    use_aggregated_geographical_data: true
+
+    maximum_rendered_markers: 5000
+
+    use_clustering_for_dense_markers: true
+
+  privacy:
+    display_only_business_relevant_geography: true
+
+  unavailable_state:
+    show_table_fallback: true
+
+    message: >
+      Geographical visualization requires verified state, district or
+      market coordinate reference data.
+
+
+# -----------------------------------------------------------------------------
+# 25. TABLE CONFIGURATION
+# -----------------------------------------------------------------------------
+
+tables:
+  enabled: true
+
+  interactive: true
+
+  default_page_size: 50
+
+  supported_page_sizes:
+    - 25
+    - 50
+    - 100
+    - 250
+    - 500
+
+  pagination:
+    enabled: true
+
+    mode: "server_side_preferred"
+
+  sorting:
+    enabled: true
+
+    multi_column_sorting: true
+
+  searching:
+    enabled: true
+
+    global_search: true
+
+    column_search: true
+
+  formatting:
+    numeric_decimals: 2
+
+    date_format: "YYYY-MM-DD"
+
+    missing_value_display: "N/A"
+
+    show_units: true
+
+  row_limits:
+    maximum_interactive_rows: 10000
+
+    maximum_export_rows: 1000000
+
+    require_confirmation_for_large_export: true
+
+  performance:
+    query_only_current_page_when_possible: true
+
+    avoid_full_table_materialization: true
+
+    use_server_side_filtering: true
+
+
+# -----------------------------------------------------------------------------
+# 26. REPORT EXPORT CONFIGURATION
+# -----------------------------------------------------------------------------
+
+exports:
+  enabled: true
+
+  output_directory: "reports/exports"
+
+  formats:
+    csv:
+      enabled: true
+
+      encoding: "utf-8"
+
+    parquet:
+      enabled: true
+
+      compression: "zstd"
+
+    excel:
+      enabled: true
+
+      maximum_rows: 100000
+
+    html:
+      enabled: true
+
+    pdf:
+      enabled: false
+
+      status: "future_implementation"
+
+  export_options:
+    preserve_active_filters: true
+
+    include_generation_timestamp: true
+
+    include_data_source: true
+
+    include_model_version_when_applicable: true
+
+    include_forecast_horizon_when_applicable: true
+
+    include_units: true
+
+    include_column_descriptions: true
+
+  large_exports:
+    enabled: true
+
+    use_chunked_processing: true
+
+    maximum_direct_csv_rows: 100000
+
+    use_parquet_for_large_datasets: true
+
+    do_not_export_entire_dataset_through_browser: true
+
+    require_user_confirmation: true
+
+  validation:
+    verify_export_schema: true
+
+    verify_output_not_empty: true
+
+    preserve_filter_context: true
+
+
+# -----------------------------------------------------------------------------
+# 27. CACHING CONFIGURATION
+# -----------------------------------------------------------------------------
+
+caching:
+  enabled: true
+
+  strategy: "ttl_and_data_version_aware"
+
+  ttl_seconds:
+    reference_data: 3600
+
+    dashboard_kpis: 300
+
+    market_summaries: 300
+
+    commodity_summaries: 300
+
+    price_trends: 600
+
+    seasonality: 1800
+
+    forecast_artifacts: 600
+
+    model_evaluation: 900
+
+    quality_reports: 900
+
+  cache_data:
+    enabled: true
+
+    maximum_entries: 100
+
+    show_spinner: true
+
+  cache_resource:
+    enabled: true
+
+    use_for:
+      - "duckdb_connection"
+      - "loaded_model_metadata"
+      - "reference_data"
+
+  invalidation:
+    on_dataset_refresh: true
+
+    on_forecast_refresh: true
+
+    on_model_version_change: true
+
+    on_quality_report_update: true
+
+  safeguards:
+    include_active_filters_in_cache_key: true
+
+    include_dataset_version_in_cache_key: true
+
+    avoid_caching_user_specific_sensitive_data: true
+
+
+# -----------------------------------------------------------------------------
+# 28. PERFORMANCE AND SCALABILITY
+# -----------------------------------------------------------------------------
+
+performance:
+  design_target:
+    records: 75962937
+
+    status: "approximate_volume_pending_local_verification"
+
+  principles:
+    - "The dashboard must not load all source rows into memory."
+    - "Use DuckDB to aggregate and filter Parquet data."
+    - "Use precomputed data marts for frequently requested metrics."
+    - "Use Polars for high-volume data transformations."
+    - "Keep dashboard queries narrow and predictable."
+    - "Use caching for repeated queries and reference data."
+    - "Use pagination for large detail tables."
+
+  processing:
+    full_dataset_loading: false
+
+    use_lazy_queries: true
+
+    use_preaggregation: true
+
+    use_partition_pruning: true
+
+    use_column_projection: true
+
+  query_limits:
+    default_timeout_seconds: 30
+
+    maximum_timeout_seconds: 120
+
+    maximum_result_rows: 100000
+
+  chart_limits:
+    maximum_line_chart_points: 5000
+
+    maximum_bar_categories: 50
+
+    maximum_scatter_points: 20000
+
+    maximum_heatmap_cells: 50000
+
+  browser:
+    avoid_large_payloads: true
+
+    avoid_unnecessary_rerenders: true
+
+    use_progress_indicators_for_long_operations: true
+
+  monitoring:
+    record_query_duration: true
+
+    record_query_result_rows: true
+
+    record_page_load_time: true
+
+    record_cache_hit_rate: true
+
+    record_export_duration: true
+
+
+# -----------------------------------------------------------------------------
+# 29. REFRESH AND DATA UPDATE MANAGEMENT
+# -----------------------------------------------------------------------------
+
+refresh:
+  enabled: true
+
+  mode: "manual_or_pipeline_triggered"
+
+  automatic_browser_refresh: false
+
+  refresh_controls:
+    show_last_updated: true
+
+    show_refresh_button: true
+
+    require_confirmation_for_full_rebuild: true
+
+  refreshable_resources:
+    reference_data: true
+
+    market_data: true
+
+    dashboard_aggregates: true
+
+    forecast_artifacts: true
+
+    model_evaluation: true
+
+    data_quality_reports: true
+
+  update_policy:
+    refresh_only_after_successful_pipeline: true
+
+    validate_new_data_before_publication: true
+
+    retain_previous_valid_snapshot: true
+
+    invalidate_relevant_caches: true
+
+  reporting:
+    show_refresh_timestamp: true
+
+    show_refresh_status: true
+
+    show_dataset_version: true
+
+    show_failed_refresh_message: true
+
+
+# -----------------------------------------------------------------------------
+# 30. APPLICATION STATE AND USER EXPERIENCE
+# -----------------------------------------------------------------------------
+
+user_experience:
+  enabled: true
+
+  loading:
+    show_spinner: true
+
+    show_progress_for_long_operations: true
+
+    show_current_operation: true
+
+    avoid_blocking_unrelated_pages: true
+
+  empty_states:
+    enabled: true
+
+    show_explanation: true
+
+    show_filter_reset_action: true
+
+    show_data_availability_message: true
+
+  error_states:
+    enabled: true
+
+    show_actionable_message: true
+
+    hide_internal_stack_trace: true
+
+    show_reference_error_id: true
+
+  notifications:
+    success: true
+
+    warning: true
+
+    error: true
+
+    informational: true
+
+  confirmations:
+    large_export: true
+
+    expensive_full_refresh: true
+
+    destructive_operations: true
+
+  session_state:
+    store_global_filters: true
+
+    store_selected_commodity: true
+
+    store_selected_market: true
+
+    store_selected_horizon: true
+
+    prevent_invalid_session_values: true
+
+
+# -----------------------------------------------------------------------------
+# 31. ERROR HANDLING AND LOGGING
+# -----------------------------------------------------------------------------
+
+logging:
+  enabled: true
+
+  level: "INFO"
+
+  output:
+    console: true
+
+    file: true
+
+  file_path: "logs/dashboard.log"
+
+  rotation:
+    enabled: true
+
+    maximum_file_size_mb: 20
+
+    backup_count: 5
+
+  events:
+    application_start: true
+
+    application_shutdown: true
+
+    page_visit: true
+
+    filter_application: true
+
+    query_execution: true
+
+    query_failure: true
+
+    cache_hit: true
+
+    cache_miss: true
+
+    export_creation: true
+
+    refresh_execution: true
+
+  privacy:
+    log_sensitive_user_data: false
+
+    log_raw_user_inputs: false
+
+    log_database_credentials: false
+
+    log_full_sql_parameters: false
+
+  error_handling:
+    catch_database_errors: true
+
+    catch_missing_file_errors: true
+
+    catch_schema_errors: true
+
+    catch_visualization_errors: true
+
+    catch_export_errors: true
+
+    preserve_error_context_in_logs: true
+
+    show_user_safe_error_messages: true
+
+
+# -----------------------------------------------------------------------------
+# 32. SECURITY AND ACCESS CONTROL
+# -----------------------------------------------------------------------------
+
+security:
+  enabled: true
+
+  application_mode: "local_development"
+
+  authentication:
+    enabled: false
+
+    provider: null
+
+    status: "not_configured"
+
+  authorization:
+    enabled: false
+
+    roles:
+      - "viewer"
+      - "analyst"
+      - "administrator"
+
+    status: "future_implementation"
+
+  database:
+    read_only_dashboard_access: true
+
+    parameterized_queries: true
+
+    prohibit_untrusted_sql_execution: true
+
+  files:
+    restrict_download_locations: true
+
+    validate_export_file_names: true
+
+    prevent_path_traversal: true
+
+  secrets:
+    load_from_environment: true
+
+    never_store_secrets_in_yaml: true
+
+    never_display_secrets_in_ui: true
+
+  user_input:
+    validate_filter_values: true
+
+    validate_date_ranges: true
+
+    limit_free_text_length: true
+
+    sanitize_download_file_names: true
+
+  deployment:
+    disable_development_toolbar_in_production: true
+
+    hide_internal_paths: true
+
+    hide_internal_exceptions: true
+
+
+# -----------------------------------------------------------------------------
+# 33. ACCESSIBILITY AND RESPONSIVE DESIGN
+# -----------------------------------------------------------------------------
+
+accessibility:
+  enabled: true
+
+  color_contrast:
+    require_readable_text: true
+
+    do_not_use_color_as_only_status_indicator: true
+
+  charts:
+    show_axis_titles: true
+
+    show_legends: true
+
+    provide_chart_descriptions: true
+
+    use_readable_labels: true
+
+  tables:
+    clear_column_names: true
+
+    display_units: true
+
+  interaction:
+    provide_tooltips: true
+
+    use_descriptive_control_labels: true
+
+    provide_empty_state_messages: true
+
+  responsive:
+    desktop: true
+
+    tablet: true
+
+    mobile: true
+
+    reduce_columns_on_small_screens: true
+
+    preserve_chart_readability: true
+
+
+# -----------------------------------------------------------------------------
+# 34. LOCALIZATION AND FORMATTING
+# -----------------------------------------------------------------------------
+
+localization:
+  default_language: "en"
+
+  supported_languages:
+    - "en"
+
+  default_country: "India"
+
+  timezone: "Asia/Kolkata"
+
+  locale: "en_IN"
+
+  currency:
+    code: "INR"
+
+    symbol: "₹"
+
+    decimal_places: 2
+
+    status: "currency_symbol_configured_price_unit_pending"
+
+  dates:
+    display_format: "DD MMM YYYY"
+
+    storage_format: "ISO-8601"
+
+  numbers:
+    decimal_separator: "."
+
+    thousands_separator: ","
+
+    compact_number_format: true
+
+  null_values:
+    display: "N/A"
+
+  future_localization:
+    hindi:
+      enabled: false
+
+      status: "future_implementation"
+
+
+# -----------------------------------------------------------------------------
+# 35. DEPLOYMENT CONFIGURATION
+# -----------------------------------------------------------------------------
+
+deployment:
+  target_environment: "local_development"
+
+  supported_environments:
+    - "local"
+    - "development"
+    - "staging"
+    - "production"
+
+  local:
+    enabled: true
+
+    host: "localhost"
+
+    port: 8501
+
+  production:
+    enabled: false
+
+    host: "0.0.0.0"
+
+    port: 8501
+
+    authentication_required: true
+
+    secrets_from_environment: true
+
+    debug_mode: false
+
+  containerization:
+    docker:
+      enabled: false
+
+      status: "future_implementation"
+
+  health_checks:
+    enabled: true
+
+    check_database_connection: true
+
+    check_required_data_marts: true
+
+    check_forecast_directory: true
+
+    check_reference_data: true
+
+  readiness:
+    require_schema_verification: true
+
+    require_successful_data_pipeline: true
+
+    require_production_review: true
+
+
+# -----------------------------------------------------------------------------
+# 36. TESTING AND VALIDATION
+# -----------------------------------------------------------------------------
+
+testing:
+  enabled: true
+
+  test_framework: "pytest"
+
+  configuration_tests:
+    enabled: true
+
+    validate_yaml_syntax: true
+
+    validate_required_sections: true
+
+    validate_page_definitions: true
+
+    validate_filter_definitions: true
+
+    validate_chart_definitions: true
+
+  data_tests:
+    enabled: true
+
+    verify_required_columns: true
+
+    verify_column_types: true
+
+    verify_date_range: true
+
+    verify_price_values: true
+
+    verify_data_mart_availability: true
+
+  query_tests:
+    enabled: true
+
+    test_filter_combinations: true
+
+    test_empty_result_handling: true
+
+    test_query_timeout: true
+
+    test_pagination: true
+
+  visualization_tests:
+    enabled: true
+
+    test_empty_inputs: true
+
+    test_missing_values: true
+
+    test_large_category_counts: true
+
+  export_tests:
+    enabled: true
+
+    test_csv: true
+
+    test_parquet: true
+
+    test_excel: true
+
+  performance_tests:
+    enabled: true
+
+    test_representative_data_volume: true
+
+    test_memory_usage: true
+
+    test_query_latency: true
+
+    test_concurrent_sessions: false
+
+
+# -----------------------------------------------------------------------------
+# 37. IMPLEMENTATION STATUS
+# -----------------------------------------------------------------------------
+
+implementation_status:
+
+  configuration_created: true
+
+  configuration_execution_verified: false
+
+  actual_dataset_schema_verified: false
+
+  data_marts_created: false
+
+  dashboard_entry_point_created: false
+
+  streamlit_application_implemented: false
+
+  global_filters_implemented: false
+
+  overview_page_implemented: false
+
+  market_explorer_implemented: false
+
+  commodity_explorer_implemented: false
+
+  price_trends_implemented: false
+
+  market_comparison_implemented: false
+
+  seasonality_analysis_implemented: false
+
+  forecasting_page_implemented: false
+
+  forecast_comparison_implemented: false
+
+  data_quality_page_implemented: false
+
+  model_performance_page_implemented: false
+
+  map_visualization_implemented: false
+
+  export_pipeline_implemented: false
+
+  caching_implemented: false
+
+  logging_implemented: false
+
+  authentication_implemented: false
+
+  performance_testing_completed: false
+
+  production_deployment_completed: false
+
+  production_approved: false
+
+  next_development_priorities:
+    - "Verify the actual dataset schema and price units."
+    - "Build the analytical data marts."
+    - "Implement the DuckDB dashboard query layer."
+    - "Build the Streamlit application entry point."
+    - "Implement global filters and session state."
+    - "Build the overview page."
+    - "Build the market and commodity explorer pages."
+    - "Implement price trends and market comparison."
+    - "Integrate forecasting artifacts."
+    - "Integrate data-quality reports."
+    - "Integrate model evaluation reports."
+    - "Implement export functionality."
+    - "Benchmark dashboard performance on representative data."
+    - "Complete security and deployment validation."

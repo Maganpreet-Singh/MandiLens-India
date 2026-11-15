@@ -1,0 +1,22 @@
+2026-11-15 11:19:55 | INFO | mandilens.__main__ | MandiLens India application initialized.
+2026-11-15 11:19:55 | WARNING | mandilens.__main__ | This is a sample warning.
+2026-11-15 11:19:55 | ERROR | mandilens.__main__ | This is a sample error.
+2026-11-15 11:35:33 | INFO | mandilens.notebooks.00_environment_setup | MandiLens India environment setup started.
+2026-11-15 11:37:18 | INFO | mandilens.notebooks.00_environment_setup | MandiLens India environment setup completed successfully.
+2026-11-15 11:38:43 | INFO | mandilens.notebooks.00_environment_setup | MandiLens India environment setup started.
+2026-11-15 11:38:48 | INFO | mandilens.notebooks.00_environment_setup | MandiLens India environment setup completed successfully.
+2026-11-15 12:52:12 | INFO | mandilens.notebooks.01_data_source_audit | MandiLens data source audit initialized.
+2026-11-15 12:52:14 | INFO | mandilens.notebooks.01_data_source_audit | Resolved Hugging Face revision: 62ad5b49bc00c60b6303ddf3d74ea0718addb59b
+2026-11-15 12:52:17 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: is-valid
+2026-11-15 12:52:18 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: splits
+2026-11-15 12:52:18 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: size
+2026-11-15 12:52:18 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: parquet
+2026-11-15 12:52:26 | INFO | mandilens.notebooks.01_data_source_audit | MandiLens source audit completed; source discovery is ready for download planning.
+2026-11-15 12:54:12 | INFO | mandilens.notebooks.01_data_source_audit | MandiLens data source audit initialized.
+2026-11-15 12:54:13 | INFO | mandilens.notebooks.01_data_source_audit | Resolved Hugging Face revision: 62ad5b49bc00c60b6303ddf3d74ea0718addb59b
+2026-11-15 12:54:16 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: is-valid
+2026-11-15 12:54:16 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: splits
+2026-11-15 12:54:17 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: size
+2026-11-15 12:54:17 | INFO | mandilens.notebooks.01_data_source_audit | Dataset Viewer endpoint completed: parquet
+2026-11-15 12:54:20 | INFO | mandilens.notebooks.01_data_source_audit | MandiLens source audit completed; source discovery is ready for download planning.
+2026-11-15 13:22:41 | INFO | mandilens.ingestion.huggingface_loader | Discovered 26 Parquet files in DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026 at commit 62ad5b49bc00c60b6303ddf3d74ea0718addb59b.

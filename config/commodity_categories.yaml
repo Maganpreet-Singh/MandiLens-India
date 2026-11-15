@@ -1,0 +1,1732 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# COMMODITY CLASSIFICATION AND STANDARDIZATION REGISTRY
+# =============================================================================
+#
+# File:
+#   config/commodity_categories.yaml
+#
+# Purpose:
+#   Define a nationwide agricultural commodity taxonomy, standardization
+#   policies, category hierarchy, aliases, classification rules and
+#   commodity validation requirements.
+#
+# Primary dataset:
+#   DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+#
+# Dataset characteristics:
+#   - Publisher-reported 75,962,937 records.
+#   - Publisher-reported 389 distinct commodity values.
+#   - Original commodity names must be preserved.
+#   - Complete local commodity inventory is still pending.
+#
+# DESIGN PRINCIPLES:
+#   1. Support every commodity in the complete nationwide dataset.
+#   2. Never restrict classification to a selected commodity shortlist.
+#   3. Preserve the original source commodity name.
+#   4. Never confuse commodity, variety and grade.
+#   5. Do not assign unverified commodity mappings.
+#   6. Prefer exact, reviewed mappings over fuzzy matching.
+#   7. Retain unknown commodities in an unclassified category.
+#   8. Keep classification rules reproducible and auditable.
+#
+# STATUS:
+#   Taxonomy defined.
+#   Actual commodity mapping pending dataset inventory audit.
+#
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURATION METADATA
+# -----------------------------------------------------------------------------
+
+metadata:
+
+  configuration_name: "MandiLens India Commodity Classification Registry"
+
+  configuration_version: "1.0.0"
+
+  schema_version: 1
+
+  configuration_status: "development"
+
+  project_name: "MandiLens India"
+
+  description: >
+    Central commodity taxonomy for organizing, standardizing and
+    analyzing agricultural commodities available across Indian
+    wholesale agricultural markets.
+
+  classification_namespace: "mandilens"
+
+  classification_method: "hierarchical_rule_based_with_reviewed_mappings"
+
+  primary_dataset_id: >
+    DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026
+
+  last_reviewed: null
+
+  mapping_status: "pending_local_dataset_inventory"
+
+  taxonomy_owner: "MandiLens India"
+
+
+# -----------------------------------------------------------------------------
+# 2. SOURCE DATA CONTEXT
+# -----------------------------------------------------------------------------
+
+source_context:
+
+  primary_source: "mandi_huggingface"
+
+  source_column:
+
+    commodity: "Commodity"
+
+    variety: "Variety"
+
+    grade: "Grade"
+
+    commodity_code: "Commodity_Code"
+
+  source_column_verification:
+
+    commodity_column_observed: true
+
+    variety_column_observed: true
+
+    grade_column_observed: true
+
+    commodity_code_column_observed: true
+
+    local_schema_verification: false
+
+  publisher_reported_profile:
+
+    distinct_commodity_count: 389
+
+    actual_distinct_count_verified: false
+
+    complete_inventory_available: false
+
+    verification_status: "publisher_reported"
+
+  source_data_policy:
+
+    preserve_original_commodity_name: true
+
+    preserve_original_variety_name: true
+
+    preserve_original_grade_name: true
+
+    preserve_original_commodity_code: true
+
+    modify_original_source_columns: false
+
+    create_standardized_columns_separately: true
+
+  expected_output_columns:
+
+    - "commodity_original"
+
+    - "commodity_normalized"
+
+    - "commodity_standardized"
+
+    - "commodity_category"
+
+    - "commodity_category_code"
+
+    - "commodity_subcategory"
+
+    - "commodity_subcategory_code"
+
+    - "commodity_code_original"
+
+    - "commodity_mapping_status"
+
+    - "commodity_mapping_method"
+
+    - "commodity_mapping_confidence"
+
+    - "classification_version"
+
+
+# -----------------------------------------------------------------------------
+# 3. CLASSIFICATION PRINCIPLES
+# -----------------------------------------------------------------------------
+
+classification_principles:
+
+  hierarchy:
+
+    level_1: "commodity_category"
+
+    level_2: "commodity_subcategory"
+
+    level_3: "commodity_standardized"
+
+    source_identity: "commodity_original"
+
+  classification_requirements:
+
+    support_all_source_commodities: true
+
+    support_future_commodities: true
+
+    support_regional_commodity_names: true
+
+    support_spelling_variations: true
+
+    support_historical_names: true
+
+    support_product_forms: true
+
+    support_processed_agricultural_products: true
+
+    support_unclassified_values: true
+
+  identification:
+
+    commodity_is_primary_classification_unit: true
+
+    variety_is_separate_dimension: true
+
+    grade_is_separate_dimension: true
+
+    commodity_code_is_reference_identifier: true
+
+  mapping_policy:
+
+    use_exact_approved_mapping_first: true
+
+    use_approved_alias_mapping_second: true
+
+    use_verified_code_mapping_when_available: true
+
+    use_unreviewed_fuzzy_matching: false
+
+    assign_unknown_values_to_fallback_category: true
+
+    require_review_for_ambiguous_mappings: true
+
+  source_integrity:
+
+    preserve_raw_values: true
+
+    preserve_original_case: true
+
+    preserve_original_punctuation: true
+
+    preserve_original_descriptors: true
+
+    record_normalization_history: true
+
+
+# -----------------------------------------------------------------------------
+# 4. CATEGORY REGISTRY
+# -----------------------------------------------------------------------------
+#
+# Category codes are internal MandiLens identifiers.
+# They are not official government commodity codes.
+#
+# Illustrative commodity examples describe category scope.
+# They are not approved mappings for the source dataset.
+# -----------------------------------------------------------------------------
+
+categories:
+
+  # ===========================================================================
+  # 01. CEREALS AND MILLETS
+  # ===========================================================================
+
+  cereals_millets:
+
+    category_id: 1
+
+    category_code: "CEREALS_MILLETS"
+
+    category_name: "Cereals and Millets"
+
+    description: >
+      Grain-producing cereal crops and millet commodities
+      commonly traded in agricultural wholesale markets.
+
+    agmark_alignment: "Food grain and allied products"
+
+    applicable: true
+
+    subcategories:
+
+      wheat:
+        name: "Wheat"
+        examples:
+          - "Wheat"
+          - "Wheat varieties"
+
+      rice:
+        name: "Rice"
+        examples:
+          - "Rice"
+          - "Paddy"
+          - "Rice varieties"
+
+      maize:
+        name: "Maize"
+        examples:
+          - "Maize"
+          - "Corn"
+
+      sorghum:
+        name: "Sorghum"
+        examples:
+          - "Jowar"
+          - "Sorghum"
+
+      pearl_millet:
+        name: "Pearl Millet"
+        examples:
+          - "Bajra"
+
+      finger_millet:
+        name: "Finger Millet"
+        examples:
+          - "Ragi"
+
+      barley:
+        name: "Barley"
+
+      other_millets:
+        name: "Other Millets"
+
+      other_cereals:
+        name: "Other Cereals"
+
+
+  # ===========================================================================
+  # 02. PULSES AND LEGUMES
+  # ===========================================================================
+
+  pulses_legumes:
+
+    category_id: 2
+
+    category_code: "PULSES_LEGUMES"
+
+    category_name: "Pulses and Legumes"
+
+    description: >
+      Pulse and legume crops traded as whole grains, split pulses
+      or other separately identified market products.
+
+    agmark_alignment: "Food grain and allied products"
+
+    applicable: true
+
+    subcategories:
+
+      bengal_gram:
+        name: "Bengal Gram / Chickpea"
+        examples:
+          - "Chana"
+          - "Bengal Gram"
+
+      pigeon_pea:
+        name: "Pigeon Pea"
+        examples:
+          - "Tur"
+          - "Arhar"
+
+      black_gram:
+        name: "Black Gram"
+        examples:
+          - "Urad"
+          - "Urd Beans"
+
+      green_gram:
+        name: "Green Gram"
+        examples:
+          - "Moong"
+
+      lentils:
+        name: "Lentils"
+        examples:
+          - "Masoor"
+
+      field_peas:
+        name: "Field Peas"
+
+      cowpea:
+        name: "Cowpea"
+
+      other_pulses:
+        name: "Other Pulses"
+
+
+  # ===========================================================================
+  # 03. OILSEEDS
+  # ===========================================================================
+
+  oilseeds:
+
+    category_id: 3
+
+    category_code: "OILSEEDS"
+
+    category_name: "Oilseeds"
+
+    description: >
+      Agricultural seeds primarily traded for edible oil extraction,
+      industrial oils and associated agricultural uses.
+
+    agmark_alignment: "Oil Seeds"
+
+    applicable: true
+
+    subcategories:
+
+      groundnut:
+        name: "Groundnut / Peanut"
+
+      mustard:
+        name: "Mustard"
+
+      rapeseed:
+        name: "Rapeseed"
+
+      soybean:
+        name: "Soybean"
+
+      sesame:
+        name: "Sesame"
+
+      sunflower:
+        name: "Sunflower Seeds"
+
+      castor:
+        name: "Castor Seed"
+
+      linseed:
+        name: "Linseed / Flaxseed"
+
+      safflower:
+        name: "Safflower"
+
+      niger_seed:
+        name: "Niger Seed"
+
+      other_oilseeds:
+        name: "Other Oilseeds"
+
+
+  # ===========================================================================
+  # 04. FRUITS
+  # ===========================================================================
+
+  fruits:
+
+    category_id: 4
+
+    category_code: "FRUITS"
+
+    category_name: "Fruits"
+
+    description: >
+      Fresh and market-traded fruit commodities classified by
+      major horticultural groups.
+
+    agmark_alignment: "Fruits and Vegetables"
+
+    applicable: true
+
+    subcategories:
+
+      tropical_fruits:
+        name: "Tropical Fruits"
+        examples:
+          - "Mango"
+          - "Banana"
+          - "Papaya"
+          - "Pineapple"
+          - "Guava"
+
+      citrus_fruits:
+        name: "Citrus Fruits"
+        examples:
+          - "Orange"
+          - "Lemon"
+          - "Sweet Lime"
+
+      temperate_fruits:
+        name: "Temperate Fruits"
+        examples:
+          - "Apple"
+          - "Pear"
+          - "Peach"
+          - "Plum"
+
+      grapes:
+        name: "Grapes"
+
+      melons:
+        name: "Melons"
+        examples:
+          - "Watermelon"
+          - "Muskmelon"
+
+      berries:
+        name: "Berries"
+
+      other_fruits:
+        name: "Other Fruits"
+
+
+  # ===========================================================================
+  # 05. VEGETABLES
+  # ===========================================================================
+
+  vegetables:
+
+    category_id: 5
+
+    category_code: "VEGETABLES"
+
+    category_name: "Vegetables"
+
+    description: >
+      Fresh vegetable commodities, including roots, tubers,
+      bulbs, leafy vegetables, gourds and other horticultural produce.
+
+    agmark_alignment: "Fruits and Vegetables"
+
+    applicable: true
+
+    subcategories:
+
+      roots_and_tubers:
+        name: "Roots and Tubers"
+        examples:
+          - "Potato"
+          - "Sweet Potato"
+          - "Radish"
+          - "Carrot"
+          - "Beetroot"
+
+      bulb_vegetables:
+        name: "Bulb Vegetables"
+        examples:
+          - "Onion"
+          - "Garlic"
+
+      leafy_vegetables:
+        name: "Leafy Vegetables"
+        examples:
+          - "Spinach"
+          - "Coriander Leaves"
+          - "Fenugreek Leaves"
+
+      cruciferous_vegetables:
+        name: "Cruciferous Vegetables"
+        examples:
+          - "Cauliflower"
+          - "Cabbage"
+          - "Broccoli"
+
+      fruit_vegetables:
+        name: "Fruit Vegetables"
+        examples:
+          - "Tomato"
+          - "Brinjal"
+          - "Capsicum"
+
+      gourds:
+        name: "Gourds"
+        examples:
+          - "Bitter Gourd"
+          - "Bottle Gourd"
+          - "Ridge Gourd"
+          - "Cucumber"
+
+      beans_and_pods:
+        name: "Beans and Pods"
+        examples:
+          - "French Beans"
+          - "Cluster Beans"
+          - "Green Peas"
+
+      other_vegetables:
+        name: "Other Vegetables"
+
+
+  # ===========================================================================
+  # 06. SPICES AND CONDIMENTS
+  # ===========================================================================
+
+  spices_condiments:
+
+    category_id: 6
+
+    category_code: "SPICES_CONDIMENTS"
+
+    category_name: "Spices and Condiments"
+
+    description: >
+      Spices, culinary herbs and condiments traded as fresh,
+      dried or otherwise source-identified agricultural products.
+
+    agmark_alignment: "Spices and Condiments"
+
+    applicable: true
+
+    subcategories:
+
+      chilli:
+        name: "Chillies"
+
+      turmeric:
+        name: "Turmeric"
+
+      ginger:
+        name: "Ginger"
+
+      garlic_spice:
+        name: "Garlic and Spice Forms"
+
+      coriander_seed:
+        name: "Coriander Seed"
+
+      cumin:
+        name: "Cumin"
+
+      fennel:
+        name: "Fennel"
+
+      fenugreek:
+        name: "Fenugreek Seed"
+
+      black_pepper:
+        name: "Black Pepper"
+
+      cardamom:
+        name: "Cardamom"
+
+      clove:
+        name: "Clove"
+
+      cinnamon:
+        name: "Cinnamon"
+
+      tamarind:
+        name: "Tamarind"
+
+      other_spices:
+        name: "Other Spices and Condiments"
+
+
+  # ===========================================================================
+  # 07. PLANTATION AND BEVERAGE CROPS
+  # ===========================================================================
+
+  plantation_beverage_crops:
+
+    category_id: 7
+
+    category_code: "PLANTATION_BEVERAGE_CROPS"
+
+    category_name: "Plantation and Beverage Crops"
+
+    description: >
+      Commercial plantation crops and agricultural commodities
+      associated with beverage production and processing.
+
+    agmark_alignment: "Other agricultural products"
+
+    applicable: true
+
+    subcategories:
+
+      tea:
+        name: "Tea"
+
+      coffee:
+        name: "Coffee"
+
+      cocoa:
+        name: "Cocoa"
+
+      arecanut:
+        name: "Arecanut"
+
+      coconut:
+        name: "Coconut"
+
+      other_plantation_crops:
+        name: "Other Plantation Crops"
+
+
+  # ===========================================================================
+  # 08. FIBRE AND INDUSTRIAL CROPS
+  # ===========================================================================
+
+  fibre_industrial_crops:
+
+    category_id: 8
+
+    category_code: "FIBRE_INDUSTRIAL_CROPS"
+
+    category_name: "Fibre and Industrial Crops"
+
+    description: >
+      Agricultural crops primarily cultivated for natural fibres
+      and other industrial applications.
+
+    agmark_alignment: "Fiber crops"
+
+    applicable: true
+
+    subcategories:
+
+      cotton:
+        name: "Cotton"
+
+      jute:
+        name: "Jute"
+
+      mesta:
+        name: "Mesta"
+
+      silk_crops:
+        name: "Silk-Associated Crops"
+
+      other_fibre_crops:
+        name: "Other Fibre Crops"
+
+
+  # ===========================================================================
+  # 09. SUGAR, STARCH AND SWEETENERS
+  # ===========================================================================
+
+  sugar_starch_sweeteners:
+
+    category_id: 9
+
+    category_code: "SUGAR_STARCH_SWEETENERS"
+
+    category_name: "Sugar, Starch and Sweeteners"
+
+    description: >
+      Agricultural commodities and traded products associated
+      with sugar, starch and natural sweetener production.
+
+    agmark_alignment: "Other products"
+
+    applicable: true
+
+    subcategories:
+
+      sugarcane:
+        name: "Sugarcane"
+
+      sugar:
+        name: "Sugar"
+
+      jaggery:
+        name: "Jaggery / Gur"
+
+      molasses:
+        name: "Molasses"
+
+      starch_products:
+        name: "Starch Products"
+
+      other_sweeteners:
+        name: "Other Sweeteners"
+
+
+  # ===========================================================================
+  # 10. NUTS AND DRY FRUITS
+  # ===========================================================================
+
+  nuts_dry_fruits:
+
+    category_id: 10
+
+    category_code: "NUTS_DRY_FRUITS"
+
+    category_name: "Nuts and Dry Fruits"
+
+    description: >
+      Edible nuts and dried fruit products traded through
+      agricultural wholesale markets.
+
+    agmark_alignment: "Edible Nuts"
+
+    applicable: true
+
+    subcategories:
+
+      cashew:
+        name: "Cashew"
+
+      almond:
+        name: "Almond"
+
+      walnut:
+        name: "Walnut"
+
+      pistachio:
+        name: "Pistachio"
+
+      raisins:
+        name: "Raisins"
+
+      dates:
+        name: "Dates"
+
+      other_nuts:
+        name: "Other Nuts and Dry Fruits"
+
+
+  # ===========================================================================
+  # 11. FLOWERS AND FLORICULTURE
+  # ===========================================================================
+
+  flowers_floriculture:
+
+    category_id: 11
+
+    category_code: "FLOWERS_FLORICULTURE"
+
+    category_name: "Flowers and Floriculture"
+
+    description: >
+      Commercial flower crops and floricultural products
+      traded in agricultural markets.
+
+    agmark_alignment: "Other agricultural products"
+
+    applicable: true
+
+    subcategories:
+
+      cut_flowers:
+        name: "Cut Flowers"
+
+      loose_flowers:
+        name: "Loose Flowers"
+
+      marigold:
+        name: "Marigold"
+
+      rose:
+        name: "Rose"
+
+      jasmine:
+        name: "Jasmine"
+
+      other_floriculture:
+        name: "Other Floriculture Products"
+
+
+  # ===========================================================================
+  # 12. ANIMAL, DAIRY AND POULTRY PRODUCTS
+  # ===========================================================================
+
+  animal_dairy_poultry_products:
+
+    category_id: 12
+
+    category_code: "ANIMAL_DAIRY_POULTRY"
+
+    category_name: "Animal, Dairy and Poultry Products"
+
+    description: >
+      Agricultural market products associated with livestock,
+      dairy production and poultry.
+
+    agmark_alignment: "Livestock, Dairy and Poultry Products"
+
+    applicable: true
+
+    subcategories:
+
+      milk:
+        name: "Milk"
+
+      dairy_products:
+        name: "Dairy Products"
+
+      ghee:
+        name: "Ghee"
+
+      butter:
+        name: "Butter"
+
+      eggs:
+        name: "Eggs"
+
+      other_animal_products:
+        name: "Other Animal Products"
+
+
+  # ===========================================================================
+  # 13. PROCESSED AGRICULTURAL PRODUCTS
+  # ===========================================================================
+
+  processed_agricultural_products:
+
+    category_id: 13
+
+    category_code: "PROCESSED_AGRICULTURAL_PRODUCTS"
+
+    category_name: "Processed Agricultural Products"
+
+    description: >
+      Market products derived from agricultural commodities
+      through milling, crushing, extraction or other processing.
+
+    agmark_alignment: "Vegetable Oils and Fats; Oil Cakes; Other Products"
+
+    applicable: true
+
+    subcategories:
+
+      vegetable_oils:
+        name: "Vegetable Oils"
+
+      oilcakes:
+        name: "Oil Cakes"
+
+      flour_and_milled_products:
+        name: "Flour and Milled Products"
+
+      processed_pulses:
+        name: "Processed Pulses"
+
+      edible_food_products:
+        name: "Other Edible Agricultural Products"
+
+      essential_oils:
+        name: "Essential Oils"
+
+      other_processed_products:
+        name: "Other Processed Agricultural Products"
+
+
+  # ===========================================================================
+  # 14. MEDICINAL AND AROMATIC CROPS
+  # ===========================================================================
+
+  medicinal_aromatic_crops:
+
+    category_id: 14
+
+    category_code: "MEDICINAL_AROMATIC_CROPS"
+
+    category_name: "Medicinal and Aromatic Crops"
+
+    description: >
+      Agricultural and plant-derived products used in
+      medicinal, aromatic and related commercial applications.
+
+    agmark_alignment: "Essential Oils and Other Products"
+
+    applicable: true
+
+    subcategories:
+
+      medicinal_plants:
+        name: "Medicinal Plants"
+
+      aromatic_plants:
+        name: "Aromatic Plants"
+
+      essential_oil_crops:
+        name: "Essential Oil Crops"
+
+      herbal_products:
+        name: "Herbal Products"
+
+      other_medicinal_crops:
+        name: "Other Medicinal and Aromatic Crops"
+
+
+  # ===========================================================================
+  # 15. OTHER AGRICULTURAL PRODUCTS
+  # ===========================================================================
+
+  other_agricultural_products:
+
+    category_id: 15
+
+    category_code: "OTHER_AGRICULTURAL_PRODUCTS"
+
+    category_name: "Other Agricultural Products"
+
+    description: >
+      Agricultural products that are identifiable but do not
+      fit the currently defined primary commodity categories.
+
+    agmark_alignment: "Other Products"
+
+    applicable: true
+
+    subcategories:
+
+      miscellaneous_crop_products:
+        name: "Miscellaneous Crop Products"
+
+      forest_products:
+        name: "Forest Products"
+
+      agricultural_byproducts:
+        name: "Agricultural Byproducts"
+
+      other_products:
+        name: "Other Agricultural Products"
+
+
+  # ===========================================================================
+  # 99. UNCLASSIFIED — REVIEW REQUIRED
+  # ===========================================================================
+
+  unclassified_pending_review:
+
+    category_id: 99
+
+    category_code: "UNCLASSIFIED_PENDING_REVIEW"
+
+    category_name: "Unclassified — Pending Review"
+
+    description: >
+      A temporary classification for commodity values that
+      cannot yet be assigned to an approved commodity category.
+
+    applicable: true
+
+    default_category: true
+
+    requires_manual_review: true
+
+    subcategories:
+
+      unknown:
+        name: "Unknown Commodity"
+
+      ambiguous:
+        name: "Ambiguous Classification"
+
+      insufficient_information:
+        name: "Insufficient Information"
+
+      newly_observed:
+        name: "Newly Observed Commodity"
+
+
+# -----------------------------------------------------------------------------
+# 5. COMMODITY NAME NORMALIZATION
+# -----------------------------------------------------------------------------
+
+normalization:
+
+  enabled: true
+
+  preserve_original_value: true
+
+  create_normalized_value: true
+
+  create_standardized_value: true
+
+  text_processing:
+
+    unicode_normalization: "NFC"
+
+    trim_leading_whitespace: true
+
+    trim_trailing_whitespace: true
+
+    collapse_repeated_whitespace: true
+
+    comparison_case: "casefold"
+
+    preserve_original_case: true
+
+    preserve_hyphens: true
+
+    preserve_parentheses: true
+
+    preserve_slashes: true
+
+    preserve_comma_descriptors: true
+
+  punctuation:
+
+    remove_punctuation: false
+
+    remove_brackets: false
+
+    remove_parenthetical_text: false
+
+    normalize_unicode_punctuation: true
+
+  descriptors:
+
+    preserve_whole_or_split: true
+
+    preserve_fresh_or_dried: true
+
+    preserve_product_form: true
+
+    preserve_leaf_or_seed_identity: true
+
+    preserve_source_parenthetical_descriptions: true
+
+  normalization_rules:
+
+    - rule_id: "NORM_001"
+      name: "Whitespace normalization"
+      operation: "trim_and_collapse_whitespace"
+
+    - rule_id: "NORM_002"
+      name: "Unicode normalization"
+      operation: "unicode_nfc"
+
+    - rule_id: "NORM_003"
+      name: "Case-insensitive comparison"
+      operation: "unicode_casefold"
+
+  prohibited_operations:
+
+    - "delete_source_commodity_descriptors"
+
+    - "remove_whole_or_split_information"
+
+    - "merge_fresh_and_dried_products_automatically"
+
+    - "merge_leaf_and_seed_products_automatically"
+
+    - "use_unreviewed_fuzzy_matching_as_final_mapping"
+
+    - "overwrite_original_commodity_name"
+
+
+# -----------------------------------------------------------------------------
+# 6. APPROVED COMMODITY MAPPINGS
+# -----------------------------------------------------------------------------
+#
+# The entries list intentionally starts empty.
+#
+# It will be populated after:
+#   1. The complete dataset has been acquired.
+#   2. All distinct commodity values have been extracted.
+#   3. Commodity codes have been profiled.
+#   4. Names and aliases have been reviewed.
+#
+# Do not manually invent a mapping for an unseen commodity.
+# -----------------------------------------------------------------------------
+
+commodity_mappings:
+
+  mapping_version: "1.0.0"
+
+  mapping_status: "pending_inventory_audit"
+
+  complete_source_inventory_required: true
+
+  require_manual_review: true
+
+  require_category_reference: true
+
+  require_subcategory_reference: true
+
+  entries: []
+
+
+# -----------------------------------------------------------------------------
+# 7. ALIAS REGISTRY
+# -----------------------------------------------------------------------------
+
+alias_registry:
+
+  enabled: true
+
+  registry_status: "pending_inventory_audit"
+
+  preserve_alias_provenance: true
+
+  use_only_approved_aliases: true
+
+  alias_resolution:
+
+    exact_source_name_first: true
+
+    approved_alias_second: true
+
+    unresolved_alias_to_review: true
+
+    fuzzy_similarity_is_suggestion_only: true
+
+  entries: []
+
+  example_policy:
+
+    description: >
+      Alias entries must be created from observed dataset values
+      and manually reviewed before being used for classification.
+
+    illustrative_pairs:
+
+      - source_name: "Jowar"
+        standardized_name: "Sorghum"
+        status: "illustrative_only_not_approved"
+
+      - source_name: "Bajra"
+        standardized_name: "Pearl Millet"
+        status: "illustrative_only_not_approved"
+
+
+# -----------------------------------------------------------------------------
+# 8. COMMODITY CODE MAPPING POLICY
+# -----------------------------------------------------------------------------
+
+commodity_code_mapping:
+
+  enabled: true
+
+  source_column: "Commodity_Code"
+
+  mapping_status: "pending_inventory_audit"
+
+  use_as_unique_global_commodity_identifier: false
+
+  verify_code_to_name_relationship: true
+
+  verify_one_to_one_relationship: true
+
+  detect_one_code_multiple_names: true
+
+  detect_multiple_codes_one_name: true
+
+  preserve_original_code: true
+
+  generate_internal_commodity_id: true
+
+  internal_identifier:
+
+    format: "stable_string_identifier"
+
+    derive_from: "approved_standardized_commodity_identity"
+
+    independent_of_source_row_order: true
+
+  mapping_policy:
+
+    use_code_for_classification_only_after_validation: true
+
+    use_exact_commodity_name_as_fallback: true
+
+    investigate_code_name_conflicts: true
+
+    never_silently_merge_conflicting_codes: true
+
+
+# -----------------------------------------------------------------------------
+# 9. CLASSIFICATION RESOLUTION ORDER
+# -----------------------------------------------------------------------------
+
+classification_rules:
+
+  enabled: true
+
+  default_category: "unclassified_pending_review"
+
+  resolution_priority:
+
+    - priority: 1
+      method: "exact_approved_commodity_mapping"
+      automatic: true
+      confidence: 1.0
+
+    - priority: 2
+      method: "exact_approved_alias_mapping"
+      automatic: true
+      confidence: 1.0
+
+    - priority: 3
+      method: "verified_commodity_code_mapping"
+      automatic: true
+      confidence: 1.0
+      requires_code_validation: true
+
+    - priority: 4
+      method: "reviewed_manual_classification"
+      automatic: true
+      confidence: 1.0
+      requires_approval: true
+
+    - priority: 5
+      method: "unclassified_fallback"
+      automatic: true
+      confidence: 0.0
+
+  matching:
+
+    case_sensitive: false
+
+    strip_outer_whitespace: true
+
+    normalize_unicode: true
+
+    allow_exact_alias_match: true
+
+    allow_partial_string_match: false
+
+    allow_substring_category_assignment: false
+
+    allow_fuzzy_auto_classification: false
+
+  confidence_policy:
+
+    approved_exact_match: 1.0
+
+    approved_alias_match: 1.0
+
+    verified_code_match: 1.0
+
+    manually_approved_match: 1.0
+
+    suggested_fuzzy_match: null
+
+    unclassified: 0.0
+
+  ambiguous_classification:
+
+    assign_automatically: false
+
+    send_for_review: true
+
+    preserve_candidate_categories: true
+
+    preserve_source_value: true
+
+
+# -----------------------------------------------------------------------------
+# 10. VARIETY AND GRADE HANDLING
+# -----------------------------------------------------------------------------
+
+product_attributes:
+
+  variety:
+
+    source_column: "Variety"
+
+    classification_dimension: "product_variety"
+
+    include_in_commodity_category: false
+
+    preserve_original_value: true
+
+    standardization_status: "future_workstream"
+
+    allow_variety_specific_analysis: true
+
+  grade:
+
+    source_column: "Grade"
+
+    classification_dimension: "product_grade"
+
+    include_in_commodity_category: false
+
+    preserve_original_value: true
+
+    standardization_status: "future_workstream"
+
+    allow_grade_specific_analysis: true
+
+  product_identity:
+
+    primary_identity: "standardized_commodity"
+
+    secondary_identity: "variety"
+
+    tertiary_identity: "grade"
+
+    do_not_merge_different_product_forms: true
+
+
+# -----------------------------------------------------------------------------
+# 11. SEASONALITY METADATA
+# -----------------------------------------------------------------------------
+
+seasonality:
+
+  enabled: true
+
+  classification_status: "future_enrichment"
+
+  supported_seasons:
+
+    kharif:
+      label: "Kharif"
+      season_code: "KHARIF"
+
+    rabi:
+      label: "Rabi"
+      season_code: "RABI"
+
+    zaid:
+      label: "Zaid"
+      season_code: "ZAID"
+
+    perennial:
+      label: "Perennial"
+      season_code: "PERENNIAL"
+
+    region_dependent:
+      label: "Region Dependent"
+      season_code: "REGION_DEPENDENT"
+
+    unknown:
+      label: "Unknown"
+      season_code: "UNKNOWN"
+
+  rules:
+
+    do_not_assume_one_season_for_all_regions: true
+
+    support_multiple_seasons_per_commodity: true
+
+    support_state_specific_crop_calendars: true
+
+    support_district_specific_crop_calendars: true
+
+    support_manual_review: true
+
+    require_external_agricultural_reference: true
+
+    never_infer_crop_season_from_price_pattern_alone: true
+
+  commodity_season_mapping:
+
+    status: "pending_future_research"
+
+    entries: []
+
+
+# -----------------------------------------------------------------------------
+# 12. CATEGORY METADATA AND ANALYTICAL ATTRIBUTES
+# -----------------------------------------------------------------------------
+
+analytical_attributes:
+
+  price_analysis:
+
+    enabled: true
+
+    supported_metrics:
+
+      - "minimum_price"
+
+      - "maximum_price"
+
+      - "modal_price"
+
+      - "daily_price_change"
+
+      - "monthly_average_price"
+
+      - "annual_average_price"
+
+      - "price_volatility"
+
+      - "seasonal_price_pattern"
+
+  market_analysis:
+
+    enabled: true
+
+    supported_dimensions:
+
+      - "state"
+
+      - "district"
+
+      - "market"
+
+      - "commodity_category"
+
+      - "commodity_subcategory"
+
+      - "commodity_standardized"
+
+      - "variety"
+
+      - "grade"
+
+  forecasting:
+
+    enabled: true
+
+    category_level_forecasting: true
+
+    commodity_level_forecasting: true
+
+    variety_level_forecasting: true
+
+    require_sufficient_historical_observations: true
+
+    require_individual_series_eligibility_check: true
+
+    category_aggregation_does_not_imply_forecast_eligibility: true
+
+  commodity_comparison:
+
+    allow_comparison_within_category: true
+
+    allow_cross_category_comparison: false
+
+    require_price_unit_compatibility: true
+
+    require_same_product_form: true
+
+
+# -----------------------------------------------------------------------------
+# 13. DATA QUALITY RULES
+# -----------------------------------------------------------------------------
+
+data_quality:
+
+  enabled: true
+
+  commodity_validation:
+
+    reject_null_commodity_name: false
+
+    flag_null_commodity_name: true
+
+    flag_empty_commodity_name: true
+
+    detect_duplicate_normalized_names: true
+
+    detect_unmapped_commodities: true
+
+    detect_unknown_category_codes: true
+
+    detect_unknown_subcategory_codes: true
+
+    detect_mapping_conflicts: true
+
+    detect_ambiguous_aliases: true
+
+    detect_invalid_category_references: true
+
+  mapping_completeness:
+
+    calculate_total_distinct_commodities: true
+
+    calculate_approved_mappings: true
+
+    calculate_unmapped_commodities: true
+
+    calculate_mapping_coverage_percentage: true
+
+    target_coverage_percentage: 100.0
+
+    target_requires_approved_mappings: true
+
+  historical_integrity:
+
+    preserve_historical_commodity_names: true
+
+    detect_name_changes_over_time: true
+
+    detect_code_changes_over_time: true
+
+    document_mapping_version_changes: true
+
+  severity:
+
+    missing_commodity_name: "high"
+
+    unmapped_commodity: "medium"
+
+    conflicting_commodity_mapping: "critical"
+
+    invalid_category_reference: "critical"
+
+    ambiguous_alias: "high"
+
+    duplicate_standardized_identity: "high"
+
+
+# -----------------------------------------------------------------------------
+# 14. REVIEW AND APPROVAL WORKFLOW
+# -----------------------------------------------------------------------------
+
+review_workflow:
+
+  enabled: true
+
+  mapping_review_required: true
+
+  review_stages:
+
+    - "source_inventory_extraction"
+
+    - "distinct_name_profiling"
+
+    - "normalization_candidate_generation"
+
+    - "alias_candidate_review"
+
+    - "category_assignment"
+
+    - "subcategory_assignment"
+
+    - "commodity_code_validation"
+
+    - "final_mapping_approval"
+
+  approvals:
+
+    require_approved_category: true
+
+    require_approved_subcategory: true
+
+    require_standardized_name: true
+
+    require_source_name_reference: true
+
+    record_reviewer: true
+
+    record_review_timestamp: true
+
+    record_review_notes: true
+
+  audit:
+
+    preserve_previous_mappings: true
+
+    maintain_mapping_change_history: true
+
+    record_old_category: true
+
+    record_new_category: true
+
+    record_change_reason: true
+
+
+# -----------------------------------------------------------------------------
+# 15. OUTPUT CONFIGURATION
+# -----------------------------------------------------------------------------
+
+outputs:
+
+  directory: "data/metadata/commodity_classification"
+
+  mapping_directory: "data/processed/commodity_mappings"
+
+  reports_directory: "reports/commodity_classification"
+
+  files:
+
+    commodity_inventory: >
+      data/metadata/commodity_classification/commodity_inventory.csv
+
+    approved_mapping_registry: >
+      data/processed/commodity_mappings/approved_commodity_mappings.csv
+
+    alias_registry: >
+      data/processed/commodity_mappings/commodity_aliases.csv
+
+    category_summary: >
+      data/metadata/commodity_classification/category_summary.json
+
+    unmapped_commodities: >
+      data/metadata/commodity_classification/unmapped_commodities.csv
+
+    classification_audit: >
+      data/metadata/commodity_classification/classification_audit.json
+
+    data_dictionary: >
+      docs/commodity_taxonomy.md
+
+  report_generation:
+
+    generate_inventory_report: true
+
+    generate_category_distribution: true
+
+    generate_unmapped_report: true
+
+    generate_mapping_coverage_report: true
+
+    generate_category_hierarchy_report: true
+
+
+# -----------------------------------------------------------------------------
+# 16. VERSIONING AND CHANGE MANAGEMENT
+# -----------------------------------------------------------------------------
+
+versioning:
+
+  enabled: true
+
+  taxonomy_version: "1.0.0"
+
+  mapping_version: "1.0.0"
+
+  semantic_versioning: true
+
+  breaking_changes_require_major_version: true
+
+  category_changes_require_audit: true
+
+  alias_changes_require_audit: true
+
+  preserve_historical_mapping_versions: true
+
+  never_silently_reclassify_historical_records: true
+
+  record_effective_date_of_mapping_changes: true
+
+
+# -----------------------------------------------------------------------------
+# 17. IMPLEMENTATION STATUS
+# -----------------------------------------------------------------------------
+
+implementation_status:
+
+  taxonomy_defined: true
+
+  category_hierarchy_defined: true
+
+  normalization_policy_defined: true
+
+  classification_rules_defined: true
+
+  unclassified_fallback_defined: true
+
+  commodity_alias_registry_created: true
+
+  commodity_mapping_registry_created: true
+
+  actual_commodity_inventory_extracted: false
+
+  all_commodity_mappings_approved: false
+
+  commodity_code_relationships_verified: false
+
+  seasonality_mapping_completed: false
+
+  local_dataset_validation_completed: false
+
+  ready_for_commodity_inventory_audit: true
+
+
+# =============================================================================
+# END OF COMMODITY CLASSIFICATION CONFIGURATION
+# =============================================================================

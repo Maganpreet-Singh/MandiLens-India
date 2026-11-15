@@ -1,0 +1,556 @@
+
+# =============================================================================
+# MANDILENS INDIA
+# Central Project Configuration
+# =============================================================================
+#
+# Project:
+#   MandiLens India
+#
+# Purpose:
+#   Nationwide agricultural market analytics, price forecasting and
+#   decision-support platform.
+#
+# Configuration file:
+#   config/project_config.yaml
+#
+# Maintained for:
+#   Data Engineering, Data Science, Machine Learning and Application layers.
+#
+# IMPORTANT:
+#   - Keep machine-specific settings out of this file.
+#   - Keep API credentials in environment variables.
+#   - Do not assume the source dataset schema before auditing it.
+#   - Use project-root-relative paths.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. PROJECT METADATA
+# -----------------------------------------------------------------------------
+
+project:
+
+  name: "MandiLens India"
+
+  slug: "mandilens-india"
+
+  version: "0.1.0"
+
+  description: >
+    An intelligent agricultural market analytics, historical price analysis,
+    machine learning forecasting and decision-support platform for Indian
+    agricultural markets.
+
+  lifecycle_stage: "development"
+
+  project_type: "data_science_and_machine_learning"
+
+  primary_domain: "agricultural_market_intelligence"
+
+  country: "India"
+
+  default_timezone: "Asia/Kolkata"
+
+  default_currency: "INR"
+
+  default_language: "en"
+
+
+# -----------------------------------------------------------------------------
+# 2. DEVELOPMENT ENVIRONMENT
+# -----------------------------------------------------------------------------
+
+environment:
+
+  name: "development"
+
+  debug: false
+
+  verbose: false
+
+  development_mode: true
+
+  allow_experimental_features: true
+
+  strict_mode: false
+
+  # Supported environments:
+  # development, testing, staging, production
+
+
+# -----------------------------------------------------------------------------
+# 3. REPRODUCIBILITY
+# -----------------------------------------------------------------------------
+
+reproducibility:
+
+  random_seed: 42
+
+  save_experiment_metadata: true
+
+  save_model_metadata: true
+
+  save_data_processing_metadata: true
+
+  record_library_versions: true
+
+  record_dataset_source: true
+
+  preserve_experiment_configuration: true
+
+
+# -----------------------------------------------------------------------------
+# 4. PROJECT DIRECTORY STRUCTURE
+# -----------------------------------------------------------------------------
+
+paths:
+
+  # All paths are relative to the project root.
+  project_root: "."
+
+  configuration:
+    root: "config"
+
+  source:
+    root: "src"
+    package: "src/mandilens"
+
+  notebooks:
+    root: "notebooks"
+
+  scripts:
+    root: "scripts"
+
+  tests:
+    root: "tests"
+
+  documentation:
+    root: "docs"
+
+
+# -----------------------------------------------------------------------------
+# 5. DATA STORAGE DIRECTORIES
+# -----------------------------------------------------------------------------
+
+storage:
+
+  root: "data"
+
+  raw:
+    path: "data/raw"
+    description: "Original downloaded source datasets."
+    immutable: true
+
+  interim:
+    path: "data/interim"
+    description: "Temporary and intermediate processing datasets."
+
+  processed:
+    path: "data/processed"
+    description: "Validated and standardized analytical datasets."
+
+  warehouse:
+    path: "data/warehouse"
+    description: "DuckDB databases and analytical warehouse outputs."
+
+  external:
+    path: "data/external"
+    description: "External supporting datasets such as weather data."
+
+  metadata:
+    path: "data/metadata"
+    description: "Dataset manifests, schema information and provenance."
+
+  temporary:
+    path: "data/temp"
+    description: "Temporary processing files."
+
+
+# -----------------------------------------------------------------------------
+# 6. PRIMARY DATASET PROFILE
+# -----------------------------------------------------------------------------
+
+dataset:
+
+  primary_dataset_id: "DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026"
+
+  dataset_scope: "nationwide"
+
+  complete_dataset_required: true
+
+  publisher_reported_profile:
+
+    approximate_record_count: 75960000
+
+    first_year: 2001
+
+    last_year: 2026
+
+    reported_yearly_parquet_files: 26
+
+    reported_format: "parquet"
+
+    verification_status: "pending_local_audit"
+
+  schema_audit:
+
+    required: true
+
+    schema_verified: false
+
+    column_names_verified: false
+
+    data_types_verified: false
+
+    actual_row_count_verified: false
+
+  coverage:
+
+    include_all_available_states: true
+
+    include_all_available_union_territories: true
+
+    include_all_available_districts: true
+
+    include_all_available_commodities: true
+
+    include_all_available_markets: true
+
+  integrity:
+
+    preserve_original_files: true
+
+    modify_raw_data: false
+
+    generate_synthetic_records: false
+
+    fabricate_missing_observations: false
+
+    preserve_source_provenance: true
+
+    expected_record_count_is_approximate: true
+
+
+# -----------------------------------------------------------------------------
+# 7. LARGE-SCALE DATA PROCESSING
+# -----------------------------------------------------------------------------
+
+data_processing:
+
+  default_engine: "duckdb"
+
+  secondary_engine: "polars"
+
+  parquet_engine: "pyarrow"
+
+  supported_engines:
+
+    - "duckdb"
+    - "polars"
+    - "pyarrow"
+    - "pandas"
+
+  pandas_policy:
+
+    allow_full_dataset_loading: false
+
+    use_for_small_aggregations: true
+
+    use_for_visualization_samples: true
+
+    use_for_modeling_subsets: true
+
+  execution:
+
+    prefer_lazy_execution: true
+
+    prefer_columnar_processing: true
+
+    avoid_unnecessary_data_copies: true
+
+    support_incremental_processing: true
+
+    support_partitioned_parquet: true
+
+  duckdb:
+
+    database_path: "data/warehouse/mandilens.duckdb"
+
+    threads: null
+
+    memory_limit: null
+
+    enable_progress_bar: true
+
+    read_only_raw_data: true
+
+  polars:
+
+    prefer_lazyframe_for_large_data: true
+
+    enable_streaming_when_supported: true
+
+  resource_limits:
+
+    # Null means that the application should use runtime or
+    # environment-specific settings rather than an arbitrary limit.
+
+    memory_limit: null
+
+    cpu_threads: null
+
+    batch_size: null
+
+
+# -----------------------------------------------------------------------------
+# 8. GENERATED OUTPUT DIRECTORIES
+# -----------------------------------------------------------------------------
+
+outputs:
+
+  artifacts:
+
+    root: "artifacts"
+
+    models: "artifacts/models"
+
+    forecasts: "artifacts/forecasts"
+
+    metrics: "artifacts/metrics"
+
+    experiments: "artifacts/experiments"
+
+    feature_data: "artifacts/features"
+
+    metadata: "artifacts/metadata"
+
+  images:
+
+    root: "images"
+
+    exploratory_analysis: "images/eda"
+
+    geographical_analysis: "images/geographical"
+
+    commodity_analysis: "images/commodities"
+
+    forecasting: "images/forecasting"
+
+    model_evaluation: "images/model_evaluation"
+
+    dashboard: "images/dashboard"
+
+  reports:
+
+    root: "reports"
+
+    data_audit: "reports/data_audit"
+
+    exploratory_analysis: "reports/eda"
+
+    machine_learning: "reports/machine_learning"
+
+  logs:
+
+    root: "logs"
+
+
+# -----------------------------------------------------------------------------
+# 9. NOTEBOOK CONFIGURATION
+# -----------------------------------------------------------------------------
+
+notebooks:
+
+  enabled: true
+
+  primary_environment: "jupyter"
+
+  save_notebook_outputs: true
+
+  suppress_unnecessary_outputs: true
+
+  display_max_rows: 20
+
+  display_max_columns: 30
+
+  display_max_cell_width: 120
+
+  avoid_absolute_path_output: true
+
+  save_visualizations: true
+
+  save_plotly_html: true
+
+  require_markdown_documentation: true
+
+  require_analytical_conclusions: true
+
+
+# -----------------------------------------------------------------------------
+# 10. VISUALIZATION DEFAULTS
+# -----------------------------------------------------------------------------
+
+visualization:
+
+  static_format: "png"
+
+  interactive_format: "html"
+
+  image_dpi: 160
+
+  figure_width: 14
+
+  figure_height: 8
+
+  use_tight_layout: true
+
+  save_figures: true
+
+  display_figures: true
+
+  save_interactive_html: true
+
+  include_plot_titles: true
+
+  include_axis_labels: true
+
+  include_legends: true
+
+  include_annotations_when_useful: true
+
+
+# -----------------------------------------------------------------------------
+# 11. LOGGING DEFAULTS
+# -----------------------------------------------------------------------------
+
+logging:
+
+  level: "INFO"
+
+  console_logging: true
+
+  file_logging: true
+
+  log_directory: "logs"
+
+  log_filename: "mandilens.log"
+
+  use_timestamp: true
+
+  include_log_level: true
+
+  include_module_name: true
+
+  include_process_id: false
+
+  rotate_log_files: true
+
+  max_file_size_mb: 10
+
+  backup_count: 5
+
+
+# -----------------------------------------------------------------------------
+# 12. EXPERIMENT MANAGEMENT
+# -----------------------------------------------------------------------------
+
+experiments:
+
+  enabled: true
+
+  experiment_directory: "artifacts/experiments"
+
+  save_parameters: true
+
+  save_metrics: true
+
+  save_model_configuration: true
+
+  save_dataset_reference: true
+
+  save_execution_metadata: true
+
+  require_train_validation_test_separation: true
+
+  prevent_temporal_data_leakage: true
+
+
+# -----------------------------------------------------------------------------
+# 13. APPLICATION DEFAULTS
+# -----------------------------------------------------------------------------
+
+application:
+
+  name: "MandiLens India"
+
+  primary_framework: "streamlit"
+
+  api_framework: "fastapi"
+
+  enable_dashboard: true
+
+  enable_api: false
+
+  default_page: "India Overview"
+
+  show_data_source_information: true
+
+  show_data_freshness_information: true
+
+  show_model_information: true
+
+
+# -----------------------------------------------------------------------------
+# 14. SECURITY AND CONFIGURATION MANAGEMENT
+# -----------------------------------------------------------------------------
+
+security:
+
+  store_credentials_in_environment: true
+
+  commit_secrets_to_git: false
+
+  allow_hardcoded_api_keys: false
+
+  validate_environment_variables: true
+
+  protect_sensitive_logs: true
+
+  use_env_file_for_local_development: true
+
+
+# -----------------------------------------------------------------------------
+# 15. GENERAL ENGINEERING POLICIES
+# -----------------------------------------------------------------------------
+
+engineering:
+
+  preserve_raw_data: true
+
+  use_type_hints: true
+
+  use_docstrings: true
+
+  use_error_handling: true
+
+  use_structured_logging: true
+
+  avoid_duplicate_logic: true
+
+  prefer_modular_code: true
+
+  prefer_reusable_functions: true
+
+  validate_data_before_processing: true
+
+  document_major_transformations: true
+
+  write_testable_code: true
+
+  maintain_reproducibility: true
+
+
+# -----------------------------------------------------------------------------
+# END OF PROJECT CONFIGURATION
+# -----------------------------------------------------------------------------
