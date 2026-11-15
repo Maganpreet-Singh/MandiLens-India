@@ -1,0 +1,12 @@
+feature_index,column_name,remote_type,dtype,feature_type
+0,State,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+1,District,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+2,Market,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+3,Commodity,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+4,Variety,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+5,Grade,"{""_type"": ""Value"", ""dtype"": ""string""}",string,Value
+6,Arrival_Date,"{""_type"": ""Value"", ""dtype"": ""date32""}",date32,Value
+7,Min_Price,"{""_type"": ""Value"", ""dtype"": ""float64""}",float64,Value
+8,Max_Price,"{""_type"": ""Value"", ""dtype"": ""float64""}",float64,Value
+9,Modal_Price,"{""_type"": ""Value"", ""dtype"": ""float64""}",float64,Value
+10,Commodity_Code,"{""_type"": ""Value"", ""dtype"": ""int64""}",int64,Value

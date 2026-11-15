@@ -1,0 +1,323 @@
+{
+  "report_name": "MandiLens India — Primary Data Source Audit",
+  "report_version": "1.0.0",
+  "generated_at_utc": "2026-11-15T07:24:20.342476+00:00",
+  "audit_mode": "remote_metadata_only_no_bulk_download",
+  "project": {
+    "name": "MandiLens India",
+    "version": "0.1.0"
+  },
+  "source": {
+    "dataset_id": "DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026",
+    "requested_revision": "main",
+    "expected_record_count": 75962937,
+    "expected_file_count": 26,
+    "expected_format": "parquet",
+    "expected_start_year": 2001,
+    "expected_end_year": 2026,
+    "repository_url": "https://huggingface.co/datasets/DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026\n",
+    "resolved_commit_sha": "62ad5b49bc00c60b6303ddf3d74ea0718addb59b",
+    "private": false,
+    "gated": false,
+    "last_modified": "2026-11-04 19:11:07+00:00"
+  },
+  "dataset_card": {
+    "available": true,
+    "url": "https://huggingface.co/datasets/DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026/raw/62ad5b49bc00c60b6303ddf3d74ea0718addb59b/README.md",
+    "character_count": 2378,
+    "headings": [
+      "India Mandi Daily Commodity Prices (2001–2026)\r",
+      "About this dataset\r",
+      "Dataset details\r",
+      "Data source and attribution\r",
+      "Important limitation\r",
+      "Intended uses\r",
+      "Disclaimer\r"
+    ],
+    "mentions_arrival_quantity_or_volume_limitation": true,
+    "error": null
+  },
+  "repository_inventory": {
+    "total_repository_files": 29,
+    "parquet_file_count": 26,
+    "parquet_files_with_known_size": 26,
+    "parquet_files_with_missing_size": 0,
+    "total_parquet_bytes_with_known_size": 853183375,
+    "total_parquet_gib_with_known_size": 0.7945889374241233,
+    "parquet_directories": [
+      "data/mandi_daily_by_year"
+    ],
+    "filename_years_observed": [
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "extensions": [
+      {
+        "extension": ".md",
+        "file_count": 1,
+        "known_size_bytes": 2390
+      },
+      {
+        "extension": ".parquet",
+        "file_count": 26,
+        "known_size_bytes": 853183375
+      },
+      {
+        "extension": "[no extension]",
+        "file_count": 2,
+        "known_size_bytes": 2504
+      }
+    ]
+  },
+  "dataset_viewer": {
+    "is_valid": {
+      "available": true,
+      "capabilities": {
+        "preview": true,
+        "viewer": true,
+        "search": true,
+        "filter": true,
+        "statistics": true
+      }
+    },
+    "splits": {
+      "available": true,
+      "count": 1,
+      "items": [
+        {
+          "dataset": "DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026",
+          "config": "default",
+          "split": "train"
+        }
+      ]
+    },
+    "size": {
+      "available": true,
+      "num_rows": 75962937,
+      "num_bytes_original_files": 853183375,
+      "num_bytes_parquet_files": 853183375,
+      "num_bytes_memory": 1065675092,
+      "viewer_parquet_file_count": 26,
+      "viewer_parquet_pending_count": 0,
+      "viewer_parquet_failed_count": 0,
+      "viewer_parquet_partial": false
+    },
+    "parquet": {
+      "available": true,
+      "file_count": 26,
+      "pending_count": 0,
+      "failed_count": 0,
+      "partial": false
+    },
+    "first_rows": {
+      "available": true,
+      "selected_split": {
+        "dataset": "DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026",
+        "config": "default",
+        "split": "train"
+      },
+      "feature_count": 11,
+      "preview_rows_displayed": 5,
+      "error": null
+    },
+    "errors": {}
+  },
+  "observed_schema": [
+    {
+      "feature_index": 0,
+      "column_name": "State",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 1,
+      "column_name": "District",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 2,
+      "column_name": "Market",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 3,
+      "column_name": "Commodity",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 4,
+      "column_name": "Variety",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 5,
+      "column_name": "Grade",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"string\"}",
+      "dtype": "string",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 6,
+      "column_name": "Arrival_Date",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"date32\"}",
+      "dtype": "date32",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 7,
+      "column_name": "Min_Price",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"float64\"}",
+      "dtype": "float64",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 8,
+      "column_name": "Max_Price",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"float64\"}",
+      "dtype": "float64",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 9,
+      "column_name": "Modal_Price",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"float64\"}",
+      "dtype": "float64",
+      "feature_type": "Value"
+    },
+    {
+      "feature_index": 10,
+      "column_name": "Commodity_Code",
+      "remote_type": "{\"_type\": \"Value\", \"dtype\": \"int64\"}",
+      "dtype": "int64",
+      "feature_type": "Value"
+    }
+  ],
+  "field_name_candidates": {
+    "date": [
+      "Arrival_Date"
+    ],
+    "price": [
+      "Min_Price",
+      "Max_Price",
+      "Modal_Price"
+    ],
+    "commodity": [
+      "Commodity",
+      "Commodity_Code"
+    ],
+    "geography": [
+      "State",
+      "District"
+    ],
+    "market": [
+      "Market"
+    ],
+    "arrival_quantity_or_volume": []
+  },
+  "profile_comparison": [
+    {
+      "metric": "Record count",
+      "publisher_or_project_reported": 75962937,
+      "remote_observation": 75962937,
+      "remote_evidence": "Dataset Viewer /size",
+      "comparison": "MATCH"
+    },
+    {
+      "metric": "Original Parquet file count",
+      "publisher_or_project_reported": 26,
+      "remote_observation": 26,
+      "remote_evidence": "Pinned repository inventory @ 62ad5b49bc00",
+      "comparison": "MATCH"
+    },
+    {
+      "metric": "Historical year coverage in file names",
+      "publisher_or_project_reported": "2001-2026",
+      "remote_observation": "2001-2026",
+      "remote_evidence": "Pinned repository file-name inventory",
+      "comparison": "MATCH"
+    },
+    {
+      "metric": "File format",
+      "publisher_or_project_reported": "parquet",
+      "remote_observation": ".parquet",
+      "remote_evidence": "Pinned repository file extensions",
+      "comparison": "MATCH"
+    }
+  ],
+  "inventory_checks": [
+    {
+      "check": "At least one original Parquet file discovered",
+      "expected": ">= 1",
+      "observed": 26,
+      "status": "PASS"
+    },
+    {
+      "check": "Publisher-reported yearly Parquet file count",
+      "expected": 26,
+      "observed": 26,
+      "status": "MATCH"
+    },
+    {
+      "check": "Filename year coverage",
+      "expected": "2001-2026",
+      "observed": "2001-2026",
+      "status": "MATCH"
+    },
+    {
+      "check": "All Parquet file sizes available",
+      "expected": "all known",
+      "observed": "26 of 26",
+      "status": "PASS"
+    }
+  ],
+  "audit_gates": {
+    "Repository metadata accessible": true,
+    "Pinned immutable commit resolved": true,
+    "Complete repository file listing retrieved": true,
+    "Original Parquet inventory discovered": true,
+    "Dataset Viewer schema preview available": true,
+    "Dataset Viewer row count available": true
+  },
+  "source_discovery_ready": true,
+  "limitations": [
+    "No bulk Parquet files were downloaded by this notebook.",
+    "No full-row scan or local Parquet footer validation was performed.",
+    "Dataset Viewer values are remote service metadata and may be refreshed or unavailable.",
+    "File-name year tokens do not prove the actual minimum or maximum Arrival_Date values.",
+    "Candidate field groups are name-based hints and require semantic validation.",
+    "A successful source audit is not a data-quality certification."
+  ]
+}
